@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Microsoft Agent 365: A Control Plane to Govern Your AI Agents">
+<meta property="og:description" content="Agent 365 is a control plane to observe, govern, and secure AI agents across the enterprise — tackling agent sprawl and shadow AI.">
+<meta property="og:url" content="https://coolsnig.github.io/ai-blog-explainers/explainers/microsoft-agent-365-now-generally-available-expands-capabilities-and-integrations.html">
+<meta property="og:image" content="https://coolsnig.github.io/ai-blog-explainers/og-image.png">
+<meta property="og:image:secure_url" content="https://coolsnig.github.io/ai-blog-explainers/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Microsoft Agent 365: A Control Plane to Govern Your AI Agents">
+<meta name="twitter:image" content="https://coolsnig.github.io/ai-blog-explainers/og-image.png">
+<title>Microsoft Agent 365 — Explainer</title>
+<style>
+  :root{
+    --clay:#CC785C;--clay-dark:#A8543C;--clay-deep:#7A3B29;--ink:#1F1B18;--slate:#3D3733;--stone:#6B6259;--cream:#F5F2EC;--paper:#FBFAF6;--sand:#EDE7DB;--line:#DED6C7;
+    --accent:#0E7490;--accent-deep:#155E75;
+    --serif:'Georgia','Times New Roman',serif;--sans:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;--mono:'SFMono-Regular','Consolas','Menlo',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  .topbar{border-top:5px solid var(--clay);background:var(--paper);border-bottom:1px solid var(--line);}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.02em;}
+  .brand .dot{width:26px;height:26px;border-radius:6px;background:var(--clay);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-family:var(--serif);font-size:16px;}
+  .srcbadge{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--accent);padding:5px 12px;border-radius:100px;}
+  .hero{background:linear-gradient(160deg,#17222A 0%,#123E4C 55%,var(--accent-deep) 100%);color:#EAF4F7;padding:64px 0 56px;}
+  .hero .wrap{max-width:900px;}
+  .hero .tag{display:inline-block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#A9D8E4;border:1px solid rgba(169,216,228,.4);padding:5px 12px;border-radius:100px;margin-bottom:22px;}
+  .hero h1{font-family:var(--serif);font-size:clamp(30px,4.6vw,50px);line-height:1.09;font-weight:700;margin-bottom:18px;}
+  .hero p.lede{font-size:clamp(17px,2.2vw,21px);color:#D6EAF0;max-width:720px;}
+  .meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:34px;padding-top:22px;border-top:1px solid rgba(234,244,247,.18);font-size:13px;}
+  .meta .m span{display:block;color:#93C4D2;letter-spacing:.12em;text-transform:uppercase;font-size:10.5px;margin-bottom:3px;}
+  .meta .m strong{font-weight:600;color:#EAF4F7;font-size:14px;}
+  section{padding:52px 0;border-bottom:1px solid var(--line);}
+  .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-deep);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--accent);display:inline-block;}
+  h2{font-family:var(--serif);font-size:clamp(24px,3.4vw,34px);line-height:1.15;margin-bottom:16px;color:var(--ink);}
+  h3{font-size:19px;margin-bottom:8px;color:var(--slate);}
+  p.body{font-size:16.5px;color:var(--slate);margin-bottom:16px;max-width:760px;}
+  .lead-quote{font-family:var(--serif);font-size:20px;line-height:1.42;color:var(--accent-deep);border-left:4px solid var(--accent);padding:6px 0 6px 22px;margin:26px 0;max-width:730px;}
+  .lead-quote cite{display:block;font-family:var(--sans);font-size:13.5px;font-style:normal;color:var(--stone);margin-top:10px;letter-spacing:.04em;}
+  .tldr{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:28px 30px;}
+  .tldr h2{font-size:20px;margin-bottom:14px;}
+  .tldr ul{list-style:none;}
+  .tldr li{position:relative;padding-left:30px;margin-bottom:11px;font-size:15.5px;color:var(--slate);}
+  .tldr li::before{content:"";position:absolute;left:0;top:8px;width:14px;height:14px;border-radius:4px;background:var(--accent);}
+  .figure{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:30px;margin:28px 0;}
+  .figure .cap{font-size:12.5px;color:var(--stone);text-transform:uppercase;letter-spacing:.1em;margin-bottom:20px;font-weight:700;}
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  @media(max-width:820px){.pillars{grid-template-columns:1fr;}}
+  .pillar{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:20px 18px;text-align:center;}
+  .pillar .ic{width:46px;height:46px;margin:0 auto 12px;border-radius:11px;background:#D3EAF1;display:flex;align-items:center;justify-content:center;font-size:22px;}
+  .pillar h4{font-size:15.5px;margin-bottom:6px;color:var(--ink);}
+  .pillar p{font-size:12.5px;color:var(--stone);line-height:1.45;}
+  .barband{margin-top:16px;background:linear-gradient(135deg,var(--accent-deep),var(--accent));color:#EAF4F7;border-radius:12px;padding:15px 22px;font-size:14px;text-align:center;}
+  .barband strong{color:#fff;}
+  .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:8px;}
+  @media(max-width:820px){.grid2{grid-template-columns:1fr;}}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px;}
+  .card h3{font-size:16px;margin-bottom:8px;}
+  .card p{font-size:13.5px;color:var(--stone);}
+  .card .pill{display:inline-block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--accent-deep);background:#D3EAF1;border-radius:100px;padding:4px 11px;margin-bottom:12px;}
+  .checks{width:100%;border-collapse:collapse;margin-top:18px;font-size:14px;background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  .checks th{background:var(--ink);color:#EAF0F2;text-align:left;padding:12px 15px;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;}
+  .checks td{padding:12px 15px;border-top:1px solid var(--line);color:var(--slate);vertical-align:top;}
+  .checks tr:nth-child(even) td{background:var(--cream);}
+  .checks td.k{font-weight:700;color:var(--accent-deep);white-space:nowrap;}
+  .callout{background:linear-gradient(135deg,var(--ink),var(--accent-deep));color:#EAF4F7;border-radius:16px;padding:34px 32px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;}
+  .callout h2{color:#fff;margin-bottom:6px;}
+  .callout p{color:#D2E7ED;font-size:15px;max-width:560px;}
+  .btn{background:var(--accent);color:#fff;text-decoration:none;padding:13px 24px;border-radius:100px;font-weight:700;font-size:14.5px;white-space:nowrap;}
+  footer{padding:30px 0 46px;color:var(--stone);font-size:12.5px;}
+  footer a{color:var(--accent-deep);}
+  .src{margin-top:8px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="dot">&#10039;</span> AI Blog Explainer</div>
+    <div class="srcbadge">Microsoft Security</div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="tag">Microsoft Security &middot; Agentic Governance &middot; May 1, 2026</span>
+    <h1>Microsoft Agent 365: A Control Plane to Govern Your AI Agents</h1>
+    <p class="lede">AI agents are already in your environment &mdash; and they proliferate fast, span apps and clouds, and often run outside the visibility of the teams accountable for risk. Agent 365 is the control plane to observe, govern, and secure them.</p>
+    <div class="meta">
+      <div class="m"><span>Source</span><strong>Microsoft Security Blog</strong></div>
+      <div class="m"><span>Topic</span><strong>Agentic AI Governance</strong></div>
+      <div class="m"><span>Status</span><strong>Generally available</strong></div>
+      <div class="m"><span>Reading time</span><strong>6 min</strong></div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="tldr">
+      <h2>The idea in five lines</h2>
+      <ul>
+        <li>The problem isn&rsquo;t that agents exist &mdash; it&rsquo;s that they multiply fast, span apps/endpoints/cloud, and act outside the control of risk teams.</li>
+        <li>An agent that can invoke tools, access data, and talk to other agents can turn a &ldquo;helpful&rdquo; workflow into data oversharing or over-privileged actions in seconds.</li>
+        <li>Agent 365 is a single <strong>control plane</strong> to observe, govern, and secure agents &mdash; both Microsoft-built and ecosystem/third-party.</li>
+        <li>New capabilities discover <strong>shadow AI</strong> agents (via Defender + Intune), apply policy guardrails, and sync inventories across AWS Bedrock and Google Cloud.</li>
+        <li>Governance principle: &ldquo;You can&rsquo;t govern what you can&rsquo;t see, and you can&rsquo;t secure what you don&rsquo;t understand.&rdquo;</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The concept</div>
+    <h2>A control plane for agent sprawl</h2>
+    <p class="body">As organizations move from pilot to adoption, agents show up everywhere &mdash; some acting on a user&rsquo;s behalf with delegated access, others operating with their own credentials behind the scenes. Agent 365 governs both, using the admin and security workflows teams already run.</p>
+
+    <div class="figure">
+      <div class="cap">Figure 1 &middot; The three jobs of the control plane</div>
+      <div class="pillars">
+        <div class="pillar"><div class="ic">&#128065;</div><h4>Observe</h4><p>End-to-end visibility of every agent &mdash; where it runs, what it can reach, and how it behaves &mdash; even as the count keeps changing.</p></div>
+        <div class="pillar"><div class="ic">&#9878;</div><h4>Govern</h4><p>Inventory and ownership, right-sized (least-privilege) permissions, and lifecycle controls across Microsoft and third-party agents.</p></div>
+        <div class="pillar"><div class="ic">&#128737;</div><h4>Secure</h4><p>Policy guardrails, runtime blocking of risky behavior, and network controls to stop prompt-based attacks and data exfiltration.</p></div>
+      </div>
+      <div class="barband">The through-line: <strong>you can&rsquo;t govern what you can&rsquo;t see</strong> &mdash; so discovery and observability come first.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">What&rsquo;s new</div>
+    <h2>From shadow AI to cross-cloud control</h2>
+    <div class="grid2">
+      <div class="card"><span class="pill">Discovery</span><h3>Find shadow AI agents</h3><p>Defender + Intune discover unmanaged local agents (starting with OpenClaw, expanding to GitHub Copilot CLI and Claude Code) and let IT block how they run.</p></div>
+      <div class="card"><span class="pill">Context</span><h3>Blast-radius mapping</h3><p>Defender maps each agent&rsquo;s devices, MCP servers, identities, and reachable cloud resources &mdash; so teams can assess exposure and set custom detections.</p></div>
+      <div class="card"><span class="pill">Cross-cloud</span><h3>Registry sync</h3><p>Discover and inventory agents across AWS Bedrock and Google Cloud, with basic lifecycle governance (start/stop/delete) coming.</p></div>
+      <div class="card"><span class="pill">Runtime</span><h3>Guardrails &amp; network controls</h3><p>Entra network controls restrict agents to approved destinations, filter risky file movement, and help block malicious prompt-based attacks.</p></div>
+      <div class="card"><span class="pill">Sandbox</span><h3>Windows 365 for Agents</h3><p>A secured, managed Cloud PC environment purpose-built for agentic workloads, run under the same identity and management controls as employees.</p></div>
+      <div class="card"><span class="pill">Ecosystem</span><h3>Third-party agents</h3><p>Partner agents (Genspark, Zendesk, Zensai, and more) come pre-configured to be observed, governed, and secured &mdash; no integration work.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The governance checklist</div>
+    <h2>What &ldquo;governing agents&rdquo; actually means</h2>
+    <p class="body">Microsoft&rsquo;s partner services frame the practical governance work into five buckets &mdash; a useful checklist for any team standing up agent governance:</p>
+    <table class="checks">
+      <tr><th style="width:32%;">Area</th><th>The question to answer</th></tr>
+      <tr><td class="k">Inventory &amp; ownership</td><td>What agents exist, who owns them, and where do they run?</td></tr>
+      <tr><td class="k">Least privilege</td><td>Are permissions right-sized and access guardrails enforced &mdash; without slowing delivery?</td></tr>
+      <tr><td class="k">Compliance &amp; data</td><td>Are we preventing oversharing and producing audit-ready evidence?</td></tr>
+      <tr><td class="k">Threats &amp; multi-platform</td><td>Do we understand attack paths and govern across vendors and clouds?</td></tr>
+      <tr><td class="k">Ongoing operations</td><td>Is there lifecycle management, monitoring, and continuous governance hygiene?</td></tr>
+    </table>
+    <p class="lead-quote">&ldquo;Enterprises can easily build AI agents today, but scaling them with trust and governance is where most initiatives stall.&rdquo;
+      <cite>&mdash; Raj Koneru, CEO, Kore.ai</cite>
+    </p>
+  </div>
+</section>
+
+<section style="border-bottom:none;">
+  <div class="wrap">
+    <div class="callout">
+      <div>
+        <h2>Availability</h2>
+        <p>Agent 365 is generally available for commercial customers &mdash; included in Microsoft 365 E7 or standalone at USD 15 per user per month. Several new discovery, context-mapping, and control capabilities are rolling out in public preview through June 2026.</p>
+      </div>
+      <a class="btn" href="https://www.microsoft.com/en-us/security/blog/2026/05/01/microsoft-agent-365-now-generally-available-expands-capabilities-and-integrations/">Read the post &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Explainer artifact generated from the Microsoft Security blog &middot; AI Blog Explainers house style (Claude clay palette, governance accent).</p>
+    <p class="src">Source: <a href="https://www.microsoft.com/en-us/security/blog/2026/05/01/microsoft-agent-365-now-generally-available-expands-capabilities-and-integrations/">Microsoft Agent 365, now generally available, expands capabilities and integrations</a> &mdash; Microsoft Security Blog, May 1, 2026. By Nirav Shah, Rob Lefferts, Jason Roszak.</p>
+  </div>
+</footer>
+
+<div id="aibe-share" style="position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:9999;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;">
+  <a href="https://www.microsoft.com/en-us/security/blog/2026/05/01/microsoft-agent-365-now-generally-available-expands-capabilities-and-integrations/" target="_blank" rel="noopener" title="Read the original article"
+     style="background:#7A3B29;color:#fff;text-decoration:none;font-size:12px;font-weight:700;padding:9px 13px;border-radius:100px;box-shadow:0 6px 18px -8px rgba(0,0,0,.5);text-align:center;">Read original &#8599;</a>
+  <button onclick="aibeCopy()" title="Copy link"
+     style="background:#CC785C;color:#fff;border:none;cursor:pointer;font-size:12px;font-weight:700;padding:9px 13px;border-radius:100px;box-shadow:0 6px 18px -8px rgba(0,0,0,.5);">Copy link</button>
+  <div style="display:flex;gap:8px;">
+    <a id="aibe-li" target="_blank" rel="noopener" title="Share on LinkedIn"
+       style="flex:1;background:#0A66C2;color:#fff;text-decoration:none;font-size:12px;font-weight:700;padding:9px 0;border-radius:100px;text-align:center;box-shadow:0 6px 18px -8px rgba(0,0,0,.5);">in</a>
+    <a id="aibe-x" target="_blank" rel="noopener" title="Share on X"
+       style="flex:1;background:#1F1B18;color:#fff;text-decoration:none;font-size:12px;font-weight:700;padding:9px 0;border-radius:100px;text-align:center;box-shadow:0 6px 18px -8px rgba(0,0,0,.5);">X</a>
+  </div>
+</div>
+<script>
+(function(){
+  var u=encodeURIComponent(location.href), t=encodeURIComponent(document.title.replace(" — Explainer",""));
+  document.getElementById("aibe-li").href="https://www.linkedin.com/sharing/share-offsite/?url="+u;
+  document.getElementById("aibe-x").href="https://twitter.com/intent/tweet?url="+u+"&text="+t;
+})();
+function aibeCopy(){
+  navigator.clipboard.writeText(location.href).then(function(){
+    var b=event.target; var o=b.textContent; b.textContent="Copied!"; setTimeout(function(){b.textContent=o;},1400);
+  });
+}
+</script>
+</body>
+</html>
