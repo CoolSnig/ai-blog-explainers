@@ -99,7 +99,6 @@
   <div class="wrap">
     <div class="controls">
       <h2 class="sec">Latest explainers</h2>
-      <span class="count" id="count"></span>
     </div>
     <div class="searchrow">
       <input id="search" class="search" type="search" placeholder="Search explainers&hellip;" oninput="onSearch()">
@@ -213,10 +212,6 @@ function render(){
     .filter(p=> activeSource==="All sources" ? true : p.source===activeSource)
     .filter(p=> activeCat==="All" ? true : p.category===activeCat)
     .filter(p=> q==="" ? true : (p.title+" "+p.summary+" "+p.source+" "+p.category).toLowerCase().includes(q));
-
-  document.getElementById("count").textContent =
-    list.length + (list.length===1 ? " explainer" : " explainers") +
-    (POSTS.length!==list.length ? " of " + POSTS.length : "");
 
   document.getElementById("empty").style.display = list.length? "none":"block";
   document.getElementById("grid").innerHTML = list.map(p=>{
