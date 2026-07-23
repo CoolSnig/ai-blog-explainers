@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Introducing Workspace Intelligence">
+<meta property="og:description" content="Google's Workspace Intelligence gives Gemini a unified, real-time understanding of your apps, projects, and colleagues to power agentic work.">
+<meta property="og:url" content="https://coolsnig.github.io/ai-blog-explainers/explainers/introducing-workspace-intelligence.html">
+<meta property="og:image" content="https://coolsnig.github.io/ai-blog-explainers/og-image.png">
+<meta property="og:image:secure_url" content="https://coolsnig.github.io/ai-blog-explainers/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Introducing Workspace Intelligence">
+<meta name="twitter:image" content="https://coolsnig.github.io/ai-blog-explainers/og-image.png">
+<title>Introducing Workspace Intelligence — Explainer</title>
+<style>
+  :root{
+    --clay:#CC785C;--clay-dark:#A8543C;--clay-deep:#7A3B29;--ink:#1F1B18;--slate:#3D3733;--stone:#6B6259;--cream:#F5F2EC;--paper:#FBFAF6;--sand:#EDE7DB;--line:#DED6C7;
+    --accent:#4285F4;--accent-deep:#1A73E8;
+    --serif:'Georgia','Times New Roman',serif;--sans:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;--mono:'SFMono-Regular','Consolas','Menlo',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  .topbar{border-top:5px solid var(--clay);background:var(--paper);border-bottom:1px solid var(--line);}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.02em;}
+  .brand .dot{width:26px;height:26px;border-radius:6px;background:var(--clay);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-family:var(--serif);font-size:16px;}
+  .srcbadge{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--accent);padding:5px 12px;border-radius:100px;}
+  .hero{background:linear-gradient(160deg,#1B2430 0%,#1E3A6E 55%,var(--accent-deep) 100%);color:#EEF3FC;padding:64px 0 56px;}
+  .hero .wrap{max-width:900px;}
+  .hero .tag{display:inline-block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#BBD3F7;border:1px solid rgba(187,211,247,.4);padding:5px 12px;border-radius:100px;margin-bottom:22px;}
+  .hero h1{font-family:var(--serif);font-size:clamp(32px,5vw,52px);line-height:1.08;font-weight:700;margin-bottom:18px;}
+  .hero p.lede{font-size:clamp(17px,2.2vw,21px);color:#DCE7F8;max-width:720px;}
+  .meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:34px;padding-top:22px;border-top:1px solid rgba(238,243,252,.18);font-size:13px;}
+  .meta .m span{display:block;color:#9DBBE8;letter-spacing:.12em;text-transform:uppercase;font-size:10.5px;margin-bottom:3px;}
+  .meta .m strong{font-weight:600;color:#EEF3FC;font-size:14px;}
+  section{padding:52px 0;border-bottom:1px solid var(--line);}
+  .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-deep);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--accent);display:inline-block;}
+  h2{font-family:var(--serif);font-size:clamp(24px,3.4vw,34px);line-height:1.15;margin-bottom:16px;color:var(--ink);}
+  h3{font-size:19px;margin-bottom:8px;color:var(--slate);}
+  p.body{font-size:16.5px;color:var(--slate);margin-bottom:16px;max-width:760px;}
+  .lead-quote{font-family:var(--serif);font-size:21px;line-height:1.4;color:var(--accent-deep);border-left:4px solid var(--accent);padding:6px 0 6px 22px;margin:26px 0;max-width:720px;}
+  .tldr{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:28px 30px;}
+  .tldr h2{font-size:20px;margin-bottom:14px;}
+  .tldr ul{list-style:none;}
+  .tldr li{position:relative;padding-left:30px;margin-bottom:11px;font-size:15.5px;color:var(--slate);}
+  .tldr li::before{content:"";position:absolute;left:0;top:8px;width:14px;height:14px;border-radius:4px;background:var(--accent);}
+  .figure{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:30px;margin:28px 0;}
+  .figure .cap{font-size:12.5px;color:var(--stone);text-transform:uppercase;letter-spacing:.1em;margin-bottom:20px;font-weight:700;}
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  @media(max-width:820px){.pillars{grid-template-columns:1fr;}}
+  .pillar{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:20px 18px;text-align:center;}
+  .pillar .ic{width:46px;height:46px;margin:0 auto 12px;border-radius:11px;background:#DCE8FB;display:flex;align-items:center;justify-content:center;font-size:22px;}
+  .pillar h4{font-size:15.5px;margin-bottom:6px;color:var(--ink);}
+  .pillar p{font-size:12.5px;color:var(--stone);line-height:1.45;}
+  .barband{margin-top:16px;background:linear-gradient(135deg,var(--accent-deep),var(--accent));color:#EEF3FC;border-radius:12px;padding:15px 22px;font-size:14px;text-align:center;}
+  .barband strong{color:#fff;}
+  .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:8px;}
+  @media(max-width:820px){.grid2{grid-template-columns:1fr;}}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px;}
+  .card h3{font-size:16px;margin-bottom:8px;}
+  .card p{font-size:13.5px;color:var(--stone);}
+  .card .pill{display:inline-block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--accent-deep);background:#DCE8FB;border-radius:100px;padding:4px 11px;margin-bottom:12px;}
+  .callout{background:linear-gradient(135deg,var(--ink),var(--accent-deep));color:#EEF3FC;border-radius:16px;padding:34px 32px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;}
+  .callout h2{color:#fff;margin-bottom:6px;}
+  .callout p{color:#D6E3F6;font-size:15px;max-width:560px;}
+  .btn{background:var(--accent);color:#fff;text-decoration:none;padding:13px 24px;border-radius:100px;font-weight:700;font-size:14.5px;white-space:nowrap;}
+  footer{padding:30px 0 46px;color:var(--stone);font-size:12.5px;}
+  footer a{color:var(--accent-deep);}
+  .src{margin-top:8px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="dot">&#10039;</span> AI Blog Explainer</div>
+    <div class="srcbadge">Google Workspace</div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="tag">Google Workspace &middot; Product &middot; April 22, 2026</span>
+    <h1>Introducing Workspace Intelligence</h1>
+    <p class="lede">A secure system that gives Gemini a unified, real-time understanding of your apps, projects, and colleagues &mdash; so it can gather context and take action across your whole workday, not just answer questions.</p>
+    <div class="meta">
+      <div class="m"><span>Source</span><strong>Google Workspace Blog</strong></div>
+      <div class="m"><span>Product</span><strong>Gemini for Workspace</strong></div>
+      <div class="m"><span>Author</span><strong>Yulie Kwon Kim, VP Product</strong></div>
+      <div class="m"><span>Reading time</span><strong>5 min</strong></div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="tldr">
+      <h2>The idea in five lines</h2>
+      <ul>
+        <li>Most of us lose hours stitching together scattered info across tabs, emails, and chats before we even start the real work.</li>
+        <li>Workspace Intelligence understands the meaning and relationships across your Docs, Slides, Gmail, projects, and org knowledge &mdash; not just the raw data.</li>
+        <li>It automates three things: gathering the right information, knowing what matters right now, and personalizing output to your voice and style.</li>
+        <li>It shows up across Chat, Docs, Sheets, Slides, Gmail, and Drive &mdash; and connects to outside tools like Asana, Jira, and Salesforce.</li>
+        <li>Enterprise-grade: your data isn&rsquo;t used for ads or model training, with US/EU data residency and client-side encryption.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The concept</div>
+    <h2>From a blank canvas to a system that understands your work</h2>
+    <p class="body">The pitch: your tools shouldn&rsquo;t just be a canvas you fill in &mdash; they should understand your goal. Workspace Intelligence is a dynamic layer that grasps the semantic relationships between your content, active projects, collaborators, and company knowledge, then does the heavy lifting for you.</p>
+
+    <div class="figure">
+      <div class="cap">Figure 1 &middot; What Workspace Intelligence automates</div>
+      <div class="pillars">
+        <div class="pillar"><div class="ic">&#128269;</div><h4>Information gathering</h4><p>Breaks down context walls to pull together everything you need the moment you want to act.</p></div>
+        <div class="pillar"><div class="ic">&#129504;</div><h4>Situational awareness</h4><p>Uses Gemini reasoning to know what&rsquo;s most important right now, so you never miss an action item.</p></div>
+        <div class="pillar"><div class="ic">&#9998;</div><h4>True personalization</h4><p>Learns your work style, voice, and formatting so every output sounds authentically like you.</p></div>
+      </div>
+      <div class="barband">It turns your scattered emails, chats, and files into <strong>a cohesive knowledge graph</strong> that both your colleagues and Gemini can draw on.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Where it shows up</div>
+    <h2>The same intelligence across your workday</h2>
+    <div class="grid2">
+      <div class="card"><span class="pill">Chat</span><h3>Ask Gemini in Chat</h3><p>A single command line for work: a daily briefing of tasks and urgent threads, plus skills that generate docs and slides, schedule meetings, and find files &mdash; even reaching into Asana, Jira, and Salesforce.</p></div>
+      <div class="card"><span class="pill">Docs · Sheets · Slides</span><h3>Blank page to brilliance</h3><p>Turns your emails, chats, and files into formatted drafts in your voice; builds and edits spreadsheets from natural language; adds data-grounded infographics in Docs; and creates full, editable decks in one shot.</p></div>
+      <div class="card"><span class="pill">Gmail</span><h3>See what matters most</h3><p>AI Inbox gives a streamlined view of what&rsquo;s important, and AI Overviews in search synthesize answers across threads instead of making you dig.</p></div>
+      <div class="card"><span class="pill">Drive</span><h3>An active knowledge base</h3><p>AI Overviews and Ask Gemini surface insights across files, and Drive Projects centrally organize files and emails so colleagues &mdash; and Gemini &mdash; have full context.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Trust</div>
+    <h2>The AI-first trifecta: agents, context, and security</h2>
+    <p class="body">Google&rsquo;s framing is that AI&rsquo;s value comes not just from reasoning, but from understanding context and completing tasks &mdash; done securely. Workspace Intelligence runs on the same governed infrastructure as the rest of Workspace.</p>
+    <div class="grid2">
+      <div class="card"><span class="pill">Your data is yours</span><h3>No ads, no outside training</h3><p>Content generated or used by your people or your agents isn&rsquo;t reviewed by humans, used for ads, or used to train AI models outside Workspace without your permission.</p></div>
+      <div class="card"><span class="pill">Controls</span><h3>Residency &amp; encryption</h3><p>Lock data processing and storage to the US or EU (more countries coming), and use client-side encryption to authoritatively deny access to your most sensitive data &mdash; even from Google.</p></div>
+    </div>
+    <p class="lead-quote">Instead of spending your day bridging apps and projects, the system does it for you &mdash; and the output already sounds like you.</p>
+  </div>
+</section>
+
+<section style="border-bottom:none;">
+  <div class="wrap">
+    <div class="callout">
+      <div>
+        <h2>Availability</h2>
+        <p>Workspace Intelligence rolls out with admin controls to manage its use across an organization; detailed rollout timing is tracked on the Workspace Updates blog. It was announced alongside a wider set of Workspace news at Google Cloud Next &rsquo;26.</p>
+      </div>
+      <a class="btn" href="https://workspace.google.com/blog/product-announcements/introducing-workspace-intelligence">Read the post &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Explainer artifact generated from the Google Workspace blog &middot; AI Blog Explainers house style (Claude clay palette, Google accent).</p>
+    <p class="src">Source: <a href="https://workspace.google.com/blog/product-announcements/introducing-workspace-intelligence">Introducing Workspace Intelligence</a> &mdash; Google Workspace Blog, April 22, 2026. Article by Yulie Kwon Kim.</p>
+  </div>
+</footer>
+
+<div id="aibe-share" style="position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:9999;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;">
+  <a href="https://workspace.google.com/blog/product-announcements/introducing-workspace-intelligence" target="_blank" rel="noopener" title="Read the original article"
+     style="background:#7A3B29;color:#fff;text-decoration:none;font-size:12px;font-weight:700;padding:9px 13px;border-radius:100px;box-shadow:0 6px 18px -8px rgba(0,0,0,.5);text-align:center;">Read original &#8599;</a>
+  <button onclick="aibeCopy()" title="Copy link"
+     style="background:#CC785C;color:#fff;border:none;cursor:pointer;font-size:12px;font-weight:700;padding:9px 13px;border-radius:100px;box-shadow:0 6px 18px -8px rgba(0,0,0,.5);">Copy link</button>
+  <div style="display:flex;gap:8px;">
+    <a id="aibe-li" target="_blank" rel="noopener" title="Share on LinkedIn"
+       style="flex:1;background:#0A66C2;color:#fff;text-decoration:none;font-size:12px;font-weight:700;padding:9px 0;border-radius:100px;text-align:center;box-shadow:0 6px 18px -8px rgba(0,0,0,.5);">in</a>
+    <a id="aibe-x" target="_blank" rel="noopener" title="Share on X"
+       style="flex:1;background:#1F1B18;color:#fff;text-decoration:none;font-size:12px;font-weight:700;padding:9px 0;border-radius:100px;text-align:center;box-shadow:0 6px 18px -8px rgba(0,0,0,.5);">X</a>
+  </div>
+</div>
+<script>
+(function(){
+  var u=encodeURIComponent(location.href), t=encodeURIComponent(document.title.replace(" — Explainer",""));
+  document.getElementById("aibe-li").href="https://www.linkedin.com/sharing/share-offsite/?url="+u;
+  document.getElementById("aibe-x").href="https://twitter.com/intent/tweet?url="+u+"&text="+t;
+})();
+function aibeCopy(){
+  navigator.clipboard.writeText(location.href).then(function(){
+    var b=event.target; var o=b.textContent; b.textContent="Copied!"; setTimeout(function(){b.textContent=o;},1400);
+  });
+}
+</script>
+</body>
+</html>
