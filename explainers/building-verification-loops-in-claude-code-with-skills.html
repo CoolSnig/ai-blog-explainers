@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Building Verification Loops in Claude Code with Skills — Explainer</title>
+<style>
+  :root{
+    --clay:#CC785C;
+    --clay-dark:#A8543C;
+    --clay-deep:#7A3B29;
+    --ink:#1F1B18;
+    --slate:#3D3733;
+    --stone:#6B6259;
+    --cream:#F5F2EC;
+    --paper:#FBFAF6;
+    --sand:#EDE7DB;
+    --line:#DED6C7;
+    --gold:#B9975B;
+    --serif:'Georgia','Times New Roman',serif;
+    --sans:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+    --mono:'SFMono-Regular','Consolas','Menlo',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  .topbar{border-top:5px solid var(--clay);background:var(--paper);border-bottom:1px solid var(--line);}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.02em;}
+  .brand .dot{width:26px;height:26px;border-radius:6px;background:var(--clay);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-family:var(--serif);font-size:16px;}
+  .kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--stone);}
+  .hero{background:linear-gradient(160deg,#2A211C 0%,#4A342A 55%,var(--clay-deep) 100%);color:#F5EFE7;padding:64px 0 56px;}
+  .hero .wrap{max-width:900px;}
+  .hero .tag{display:inline-block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#E9C6B5;border:1px solid rgba(233,198,181,.4);padding:5px 12px;border-radius:100px;margin-bottom:22px;}
+  .hero h1{font-family:var(--serif);font-size:clamp(32px,5vw,52px);line-height:1.08;font-weight:700;margin-bottom:18px;}
+  .hero p.lede{font-size:clamp(17px,2.2vw,21px);color:#EADFD3;max-width:680px;}
+  .meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:34px;padding-top:22px;border-top:1px solid rgba(245,239,231,.18);font-size:13px;}
+  .meta .m span{display:block;color:#D9B9A6;letter-spacing:.12em;text-transform:uppercase;font-size:10.5px;margin-bottom:3px;}
+  .meta .m strong{font-weight:600;color:#F7EEE6;font-size:14px;}
+  section{padding:52px 0;border-bottom:1px solid var(--line);}
+  .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--clay-dark);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--clay);display:inline-block;}
+  h2{font-family:var(--serif);font-size:clamp(24px,3.4vw,34px);line-height:1.15;margin-bottom:16px;color:var(--ink);}
+  h3{font-size:19px;margin-bottom:8px;color:var(--slate);}
+  p.body{font-size:16.5px;color:var(--slate);margin-bottom:16px;max-width:760px;}
+  .lead-quote{font-family:var(--serif);font-size:22px;line-height:1.4;color:var(--clay-deep);border-left:4px solid var(--clay);padding:6px 0 6px 22px;margin:26px 0;max-width:720px;}
+  .tldr{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:28px 30px;box-shadow:0 1px 0 var(--sand);}
+  .tldr h2{font-size:20px;margin-bottom:14px;}
+  .tldr ul{list-style:none;}
+  .tldr li{position:relative;padding-left:30px;margin-bottom:11px;font-size:15.5px;color:var(--slate);}
+  .tldr li::before{content:"";position:absolute;left:0;top:8px;width:14px;height:14px;border-radius:4px;background:var(--clay);}
+  .figure{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:30px;margin:28px 0;}
+  .figure .cap{font-size:12.5px;color:var(--stone);text-transform:uppercase;letter-spacing:.1em;margin-bottom:20px;font-weight:700;}
+  .loop{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:6px;}
+  @media(max-width:720px){.loop{grid-template-columns:1fr;}.loop .arrow{transform:rotate(90deg);justify-self:center;}}
+  .node{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:18px 16px;text-align:center;}
+  .node .ic{width:44px;height:44px;margin:0 auto 12px;border-radius:11px;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:22px;}
+  .node h4{font-size:15px;margin-bottom:6px;color:var(--ink);}
+  .node p{font-size:12.5px;color:var(--stone);line-height:1.45;}
+  .node.accent{background:var(--clay);border-color:var(--clay);}
+  .node.accent .ic{background:rgba(255,255,255,.2);}
+  .node.accent h4{color:#fff;}
+  .node.accent p{color:#F3DDD2;}
+  .arrow{color:var(--clay);font-size:24px;font-weight:700;text-align:center;}
+  .loopback{text-align:center;margin-top:16px;font-size:13px;color:var(--clay-dark);font-weight:600;font-style:italic;}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:8px;}
+  @media(max-width:820px){.grid3{grid-template-columns:1fr;}}
+  .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:8px;}
+  @media(max-width:820px){.grid2{grid-template-columns:1fr;}}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:24px;}
+  .card .num{font-family:var(--serif);font-size:34px;color:var(--clay);line-height:1;margin-bottom:14px;}
+  .card h3{font-size:17px;margin-bottom:8px;}
+  .card p{font-size:14px;color:var(--stone);}
+  .card .pill{display:inline-block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--clay-deep);background:var(--sand);border-radius:100px;padding:4px 11px;margin-bottom:12px;}
+  .builtins{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:20px;}
+  @media(max-width:820px){.builtins{grid-template-columns:1fr;}}
+  .bi{display:flex;gap:14px;background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:16px 18px;}
+  .bi .tick{flex:none;width:30px;height:30px;border-radius:8px;background:var(--clay);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;}
+  .bi h4{font-size:14.5px;margin-bottom:3px;color:var(--ink);}
+  .bi p{font-size:13px;color:var(--stone);line-height:1.45;}
+  pre{background:var(--ink);color:#EDE3D8;border-radius:12px;padding:20px 22px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.6;margin:20px 0;border:1px solid #000;}
+  pre .c{color:#B9975B;}
+  pre .k{color:#E9A98C;}
+  .tl{position:relative;margin-top:24px;padding-left:8px;}
+  .tl .rail{position:absolute;left:18px;top:8px;bottom:8px;width:2px;background:var(--line);}
+  .tl .step{position:relative;padding:0 0 26px 52px;}
+  .tl .step:last-child{padding-bottom:0;}
+  .tl .dot{position:absolute;left:9px;top:2px;width:20px;height:20px;border-radius:50%;background:var(--clay);border:4px solid var(--cream);box-shadow:0 0 0 1px var(--clay);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+  .tl .t{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--clay-dark);font-weight:700;margin-bottom:3px;}
+  .tl h4{font-size:16px;margin-bottom:4px;color:var(--ink);}
+  .tl p{font-size:14px;color:var(--stone);max-width:640px;}
+  .callout{background:linear-gradient(135deg,var(--ink),var(--clay-deep));color:#F4ECE4;border-radius:16px;padding:34px 32px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;}
+  .callout h2{color:#fff;margin-bottom:6px;}
+  .callout p{color:#E7D6CA;font-size:15px;max-width:560px;}
+  .btn{background:var(--clay);color:#fff;text-decoration:none;padding:13px 24px;border-radius:100px;font-weight:700;font-size:14.5px;white-space:nowrap;border:1px solid rgba(255,255,255,.15);}
+  .protip{background:#FBF3EC;border:1px solid #E7C9B6;border-left:4px solid var(--clay);border-radius:10px;padding:18px 22px;margin:24px 0;max-width:820px;}
+  .protip strong{color:var(--clay-deep);}
+  footer{padding:30px 0 46px;color:var(--stone);font-size:12.5px;}
+  footer a{color:var(--clay-dark);}
+  .src{margin-top:8px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="dot">&#10039;</span> Claude &middot; Blog Explainer</div>
+    <div class="kicker">Claude Code &middot; Best Practices</div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="tag">Claude Code &middot; July 22, 2026</span>
+    <h1>Building Verification Loops in Claude Code with Skills</h1>
+    <p class="lede">Turn the manual checks you keep repeating into skills, so Claude can close its own feedback loop &mdash; and land closer to what you want on the first try.</p>
+    <div class="meta">
+      <div class="m"><span>Category</span><strong>Claude Code</strong></div>
+      <div class="m"><span>Product</span><strong>Claude Code</strong></div>
+      <div class="m"><span>Reading time</span><strong>5 min</strong></div>
+      <div class="m"><span>Author</span><strong>Delba de Oliveira</strong></div>
+    </div>
+  </div>
+</header>
+
+<!-- TL;DR -->
+<section>
+  <div class="wrap">
+    <div class="tldr">
+      <h2>The idea in five lines</h2>
+      <ul>
+        <li>Every agentic coding session runs a loop: gather context &rarr; take action &rarr; verify results &rarr; loop back if needed.</li>
+        <li>Verification is how the agent checks its own work. Claude already reads linters, type checkers, tests and runtime errors automatically.</li>
+        <li>The steps Claude <em>can&rsquo;t</em> infer are the manual checks you do by hand &mdash; and those can become reusable skills.</li>
+        <li>A skill is a short markdown file: a few lines of frontmatter plus plain-English instructions for the check.</li>
+        <li>Match each check to where it runs &mdash; standalone, embedded, chained, or on every PR &mdash; and personal habits become team infrastructure.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- The agentic loop -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The core concept</div>
+    <h2>What a verification loop actually is</h2>
+    <p class="body">In Claude Code, a verification loop is an iterative process where Claude checks its work and attempts to fix it before responding. It sits inside the larger agentic loop that every session follows.</p>
+
+    <div class="figure">
+      <div class="cap">Figure 1 &middot; The agentic loop</div>
+      <div class="loop">
+        <div class="node">
+          <div class="ic">&#128269;</div>
+          <h4>1. Gather context</h4>
+          <p>Read the codebase, specs, and signals needed to understand the task.</p>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="node">
+          <div class="ic">&#9881;&#65039;</div>
+          <h4>2. Take action</h4>
+          <p>Make the change &mdash; write code, edit files, run commands.</p>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="node accent">
+          <div class="ic">&#10003;</div>
+          <h4>3. Verify results</h4>
+          <p>Check the work against deterministic signals and your custom rules.</p>
+        </div>
+      </div>
+      <div class="loopback">&#8635; If verification fails, Claude loops back to gather more context and try again.</div>
+    </div>
+
+    <p class="body">Whatever Claude can infer from the codebase &mdash; type errors, lint failures, test results &mdash; it already folds into step three. Whatever it can&rsquo;t infer becomes the steps <em>you</em> take to manually check a feature. Those manual steps are exactly what you can encode so Claude closes the loop itself while you work on something else.</p>
+  </div>
+</section>
+
+<!-- Built-in loops -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Start here</div>
+    <h2>Verification loops Claude already supports</h2>
+    <p class="body">Before designing anything custom, it helps to know what&rsquo;s built in. Reach for these first &mdash; they may already cover your process.</p>
+
+    <div class="builtins">
+      <div class="bi"><div class="tick">&#47;</div><div><h4>/verify skill</h4><p>Builds, runs, and observes the changes inside your application.</p></div></div>
+      <div class="bi"><div class="tick">&#128295;</div><div><h4>Toolchain awareness</h4><p>Catches error codes and warnings from any tool you provide. List exact build/test commands in CLAUDE.md.</p></div></div>
+      <div class="bi"><div class="tick">&#128064;</div><div><h4>Code Review (research preview)</h4><p>A managed multi-agent service that runs an automated review pass on PRs in enabled repos.</p></div></div>
+      <div class="bi"><div class="tick">&#9881;</div><div><h4>GitHub Actions</h4><p>Define a job that invokes Claude with a verification skill so local checks fire on every push or PR.</p></div></div>
+      <div class="bi"><div class="tick">&#128203;</div><div><h4>Spec validation</h4><p>A skill that verifies each change against a markdown spec in the repo and works to fix violations.</p></div></div>
+      <div class="bi"><div class="tick">&#127941;</div><div><h4>Rubrics in Managed Agents (beta)</h4><p>A grader agent verifies outcomes against a rubric; failures loop back for rework automatically.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Make it a skill -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Encode the check</div>
+    <h2>Make the repetitive step a skill</h2>
+    <p class="body">When you find yourself making the same small correction every time Claude implements a feature, write it down &mdash; the way you&rsquo;d hand it to a new teammate on day one. The fastest path is to let the skill-creator plugin interview you:</p>
+
+    <pre><span class="c">// Let Claude interview you and write the skill</span>
+/skill-creator Create a skill for verifying frontend
+changes end-to-end. Interview me about my workflow.</pre>
+
+    <p class="body">Or hand-write one by dropping a markdown file in <code>.claude/skills/</code>. The simplest verification skill is a few lines of frontmatter plus a body:</p>
+
+    <pre><span class="c"># .claude/skills/verify-log-hygiene/SKILL.md</span>
+<span class="k">---</span>
+<span class="k">name:</span> verify-log-hygiene
+<span class="k">description:</span> Check that error logs include the request ID
+  and never include the request body. Use when the diff
+  touches error handling or logging.
+<span class="k">allowed-tools:</span> [Read, Edit, Grep]
+<span class="k">---</span>
+Read the error-handling paths in the current diff.
+
+For each log call on an error path, confirm it includes
+the request ID and does not pass the request body,
+headers, or any user-supplied payload.
+
+Report each violation with file:line, then fix it.</pre>
+
+    <div class="protip">
+      <strong>Pro tip.</strong> The check doesn&rsquo;t have to be qualitative. &ldquo;Reject any migration that drops a column without a backfill step&rdquo; is a deterministic, project-specific rule no generic linter will catch. Anything you keep enforcing by hand qualifies for capture as a loop.
+    </div>
+  </div>
+</section>
+
+<!-- Match the check to where it runs -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Placement</div>
+    <h2>Match the check to where it runs</h2>
+    <p class="body">The next decision is <em>how</em> the loop kicks off. There are four patterns, arranged from most manual to fully automated across the team.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <span class="pill">Pattern 1</span>
+        <h3>Standalone</h3>
+        <p>You invoke it deliberately, after the artifact exists. Best for cross-cutting checks that don&rsquo;t apply every time &mdash; a pre-commit security scan, a pre-PR accessibility audit, license-header verification. The signal you&rsquo;ve outgrown it: you&rsquo;re running it after <em>every</em> change.</p>
+      </div>
+      <div class="card">
+        <span class="pill">Pattern 2</span>
+        <h3>Embedded</h3>
+        <p>Fires automatically as part of the producing skill &mdash; often a one-line append to that skill&rsquo;s body. The check belongs to one specific workflow, which now runs it without you asking. Only works on skills you can edit; plugin-managed skills are off-limits.</p>
+      </div>
+      <div class="card">
+        <span class="pill">Pattern 3</span>
+        <h3>Chained</h3>
+        <p>One skill calls another at its end. Anthropic&rsquo;s own team chains <code>/code-review</code> &rarr; <code>/simplify</code> &rarr; <code>/verify</code> &rarr; a custom <code>/design</code> check. A habit (&ldquo;I always run /verify after /simplify&rdquo;) becomes a contract. Also how you add verification to a skill you can&rsquo;t modify.</p>
+      </div>
+      <div class="card">
+        <span class="pill">Pattern 4</span>
+        <h3>On every PR</h3>
+        <p>The solid chain runs on every pull request. A teammate&rsquo;s change passes the same gates yours did, whether or not they remembered to invoke it. This is where verification stops being personal infrastructure and becomes <strong>team infrastructure</strong>.</p>
+      </div>
+    </div>
+
+    <pre><span class="c"># .claude/skills/safe-refactor/SKILL.md  (a chained wrapper)</span>
+Run /simplify on the current diff first.
+When /simplify finishes, invoke /verify-no-public-api-changes.</pre>
+  </div>
+</section>
+
+<!-- The repeatable process -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The playbook</div>
+    <h2>The loop-engineering process, every time</h2>
+    <p class="body">Whatever you&rsquo;re automating and in whatever environment, the creation process is the same six steps.</p>
+
+    <div class="tl">
+      <div class="rail"></div>
+      <div class="step"><div class="dot">1</div><div class="t">Observe</div><h4>Pick the manual follow-up you did most often this week</h4><p>The corrections you keep making by hand are the highest-value candidates for capture.</p></div>
+      <div class="step"><div class="dot">2</div><div class="t">Reuse</div><h4>Try the built-in /verify skill first</h4><p>See if it already helps your process before writing anything custom.</p></div>
+      <div class="step"><div class="dot">3</div><div class="t">Articulate</div><h4>Write the procedure in plain English</h4><p>The way you&rsquo;d hand it to a new teammate on day one. Stuck? Ask Claude for best practices and edit from there.</p></div>
+      <div class="step"><div class="dot">4</div><div class="t">Encode</div><h4>Hand it to skill-creator, or drop the markdown yourself</h4><p>Into <code>.claude/skills/</code>. Frontmatter plus a body is enough to start.</p></div>
+      <div class="step"><div class="dot">5</div><div class="t">Verify the verifier</div><h4>Invoke it on a new task and confirm the check runs</h4><p>Watch it appear in the output. Iterate if the description isn&rsquo;t pulling it in.</p></div>
+      <div class="step"><div class="dot">6</div><div class="t">Compose</div><h4>Experiment with chaining for an end-to-end flow</h4><p>Link verified handoffs so the whole dev cycle runs on its own &mdash; you only step in when something escalates.</p></div>
+    </div>
+
+    <p class="lead-quote">The more you can encode for Claude to follow, the more often Claude&rsquo;s response lands closer to what you want on the very first try.</p>
+    <p class="body">The corrections you no longer have to fiddle with free up your attention for the individual, exclusive work that no skill can write down for you.</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="border-bottom:none;">
+  <div class="wrap">
+    <div class="callout">
+      <div>
+        <h2>Get started with verification loops</h2>
+        <p>Install the skill-creator plugin, capture this week&rsquo;s most-repeated check, and let Claude Code close its own feedback loop.</p>
+      </div>
+      <a class="btn" href="https://claude.com/product/claude-code">Explore Claude Code &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Explainer artifact generated from the Claude blog &middot; JPM-style design system in Claude clay palette.</p>
+    <p class="src">Source: <a href="https://claude.com/blog/building-verification-loops-in-claude-code-with-skills">Building verification loops in Claude Code with skills</a> &mdash; claude.com/blog, July 22, 2026. Article by Delba de Oliveira, Claude Code team.</p>
+  </div>
+</footer>
+
+</body>
+</html>

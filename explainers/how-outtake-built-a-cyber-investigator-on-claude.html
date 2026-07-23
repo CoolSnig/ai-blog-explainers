@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Outtake Built a Cyber Investigator on Claude — Explainer</title>
+<style>
+  :root{
+    --clay:#CC785C;
+    --clay-dark:#A8543C;
+    --clay-deep:#7A3B29;
+    --ink:#1F1B18;
+    --slate:#3D3733;
+    --stone:#6B6259;
+    --cream:#F5F2EC;
+    --paper:#FBFAF6;
+    --sand:#EDE7DB;
+    --line:#DED6C7;
+    --gold:#B9975B;
+    --danger:#9C4A38;
+    --serif:'Georgia','Times New Roman',serif;
+    --sans:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+    --mono:'SFMono-Regular','Consolas','Menlo',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  .topbar{border-top:5px solid var(--clay);background:var(--paper);border-bottom:1px solid var(--line);}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.02em;}
+  .brand .dot{width:26px;height:26px;border-radius:6px;background:var(--clay);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-family:var(--serif);font-size:16px;}
+  .kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--stone);}
+  .hero{background:linear-gradient(160deg,#221A16 0%,#40261E 50%,var(--clay-deep) 100%);color:#F5EFE7;padding:64px 0 56px;}
+  .hero .wrap{max-width:900px;}
+  .hero .tag{display:inline-block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#E9C6B5;border:1px solid rgba(233,198,181,.4);padding:5px 12px;border-radius:100px;margin-bottom:22px;}
+  .hero h1{font-family:var(--serif);font-size:clamp(32px,5vw,52px);line-height:1.08;font-weight:700;margin-bottom:18px;}
+  .hero p.lede{font-size:clamp(17px,2.2vw,21px);color:#EADFD3;max-width:700px;}
+  .meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:34px;padding-top:22px;border-top:1px solid rgba(245,239,231,.18);font-size:13px;}
+  .meta .m span{display:block;color:#D9B9A6;letter-spacing:.12em;text-transform:uppercase;font-size:10.5px;margin-bottom:3px;}
+  .meta .m strong{font-weight:600;color:#F7EEE6;font-size:14px;}
+  section{padding:52px 0;border-bottom:1px solid var(--line);}
+  .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--clay-dark);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--clay);display:inline-block;}
+  h2{font-family:var(--serif);font-size:clamp(24px,3.4vw,34px);line-height:1.15;margin-bottom:16px;color:var(--ink);}
+  h3{font-size:19px;margin-bottom:8px;color:var(--slate);}
+  p.body{font-size:16.5px;color:var(--slate);margin-bottom:16px;max-width:760px;}
+  .lead-quote{font-family:var(--serif);font-size:22px;line-height:1.4;color:var(--clay-deep);border-left:4px solid var(--clay);padding:6px 0 6px 22px;margin:26px 0;max-width:720px;}
+  .lead-quote cite{display:block;font-family:var(--sans);font-size:13.5px;font-style:normal;color:var(--stone);margin-top:10px;letter-spacing:.04em;}
+  /* stats band */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:8px;}
+  @media(max-width:820px){.stats{grid-template-columns:repeat(2,1fr);}}
+  .stat{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px 20px;text-align:center;}
+  .stat .big{font-family:var(--serif);font-size:38px;color:var(--clay);line-height:1;margin-bottom:8px;}
+  .stat .lbl{font-size:12.5px;color:var(--stone);line-height:1.4;}
+  /* pitch table */
+  .pitch{width:100%;border-collapse:collapse;margin-top:8px;font-size:14.5px;background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  .pitch td{padding:14px 18px;border-top:1px solid var(--line);color:var(--slate);vertical-align:top;}
+  .pitch tr:first-child td{border-top:none;}
+  .pitch td.k{font-weight:700;color:var(--clay-deep);white-space:nowrap;width:120px;background:var(--cream);}
+  /* attack chain */
+  .figure{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:30px;margin:28px 0;}
+  .figure .cap{font-size:12.5px;color:var(--stone);text-transform:uppercase;letter-spacing:.1em;margin-bottom:20px;font-weight:700;}
+  .chain{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;gap:6px;}
+  @media(max-width:720px){.chain{grid-template-columns:1fr;}.chain .arrow{transform:rotate(90deg);justify-self:center;}}
+  .node{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:18px 16px;text-align:center;display:flex;flex-direction:column;}
+  .node .ic{width:44px;height:44px;margin:0 auto 12px;border-radius:11px;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:22px;}
+  .node h4{font-size:15px;margin-bottom:6px;color:var(--ink);}
+  .node p{font-size:12.5px;color:var(--stone);line-height:1.45;}
+  .node.attack .ic{background:#EAD3CB;}
+  .arrow{color:var(--clay);font-size:24px;font-weight:700;text-align:center;align-self:center;}
+  .defense-band{margin-top:16px;background:linear-gradient(135deg,var(--clay-deep),var(--clay-dark));color:#F6E9E2;border-radius:12px;padding:16px 22px;font-size:14px;text-align:center;}
+  .defense-band strong{color:#fff;}
+  /* legacy vs outtake */
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:8px;}
+  @media(max-width:820px){.grid3{grid-template-columns:1fr;}}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px;}
+  .card h3{font-size:16px;margin-bottom:8px;}
+  .card p{font-size:13.5px;color:var(--stone);}
+  .card .slice{display:inline-block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--clay-deep);background:var(--sand);border-radius:100px;padding:4px 11px;margin-bottom:12px;}
+  /* timeline */
+  .tl{position:relative;margin-top:24px;padding-left:8px;}
+  .tl .rail{position:absolute;left:18px;top:8px;bottom:8px;width:2px;background:var(--line);}
+  .tl .step{position:relative;padding:0 0 26px 52px;}
+  .tl .step:last-child{padding-bottom:0;}
+  .tl .dot{position:absolute;left:9px;top:2px;width:20px;height:20px;border-radius:50%;background:var(--clay);border:4px solid var(--cream);box-shadow:0 0 0 1px var(--clay);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+  .tl .t{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--clay-dark);font-weight:700;margin-bottom:3px;}
+  .tl h4{font-size:16px;margin-bottom:4px;color:var(--ink);}
+  .tl p{font-size:14px;color:var(--stone);max-width:660px;}
+  /* learnings */
+  .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:8px;}
+  @media(max-width:820px){.grid2{grid-template-columns:1fr;}}
+  .learn{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:24px;}
+  .learn .ic{width:40px;height:40px;border-radius:10px;background:var(--clay);color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:14px;}
+  .learn h3{font-size:16.5px;margin-bottom:8px;color:var(--ink);}
+  .learn p{font-size:13.5px;color:var(--stone);}
+  /* best practices table */
+  .roles{width:100%;border-collapse:collapse;margin-top:20px;font-size:14px;background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  .roles th{background:var(--ink);color:#F1E9E1;text-align:left;padding:13px 16px;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;}
+  .roles td{padding:13px 16px;border-top:1px solid var(--line);color:var(--slate);vertical-align:top;}
+  .roles tr:nth-child(even) td{background:var(--cream);}
+  .roles td.role{font-weight:700;color:var(--clay-deep);}
+  .callout{background:linear-gradient(135deg,var(--ink),var(--clay-deep));color:#F4ECE4;border-radius:16px;padding:34px 32px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;}
+  .callout h2{color:#fff;margin-bottom:6px;}
+  .callout p{color:#E7D6CA;font-size:15px;max-width:560px;}
+  .btn{background:var(--clay);color:#fff;text-decoration:none;padding:13px 24px;border-radius:100px;font-weight:700;font-size:14.5px;white-space:nowrap;border:1px solid rgba(255,255,255,.15);}
+  footer{padding:30px 0 46px;color:var(--stone);font-size:12.5px;}
+  footer a{color:var(--clay-dark);}
+  .src{margin-top:8px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="dot">&#10039;</span> Claude &middot; Blog Explainer</div>
+    <div class="kicker">How startups build with Claude</div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="tag">Agents &middot; Claude Code &middot; July 22, 2026</span>
+    <h1>How Outtake Built a Cyber Investigator on Claude</h1>
+    <p class="lede">Fleets of AI agents that detect, investigate, and dismantle digital threats &mdash; and the harness that keeps multi-hour autonomous sessions on track.</p>
+    <div class="meta">
+      <div class="m"><span>Category</span><strong>Agents &middot; Claude Code</strong></div>
+      <div class="m"><span>Product</span><strong>Claude Code &middot; Agent SDK</strong></div>
+      <div class="m"><span>Reading time</span><strong>5 min</strong></div>
+      <div class="m"><span>Series</span><strong>How startups build with Claude</strong></div>
+    </div>
+  </div>
+</header>
+
+<!-- Quick pitch + stats -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The company</div>
+    <h2>The quick pitch</h2>
+    <table class="pitch">
+      <tr><td class="k">Name</td><td>Outtake &mdash; an AI cybersecurity platform</td></tr>
+      <tr><td class="k">Founded</td><td>2023</td></tr>
+      <tr><td class="k">Founder</td><td>Alex Dhillon (CEO), formerly of Palantir&rsquo;s moonshot team</td></tr>
+      <tr><td class="k">Customers</td><td>Leading AI labs, major hedge funds, and US federal agencies</td></tr>
+    </table>
+
+    <div class="stats" style="margin-top:22px;">
+      <div class="stat"><div class="big">6&times;</div><div class="lbl">Annual recurring revenue growth, year-over-year</div></div>
+      <div class="stat"><div class="big">10&times;+</div><div class="lbl">Customer base growth, year-over-year</div></div>
+      <div class="stat"><div class="big">20M+</div><div class="lbl">Potential cyberattacks scanned in 2025 alone</div></div>
+      <div class="stat"><div class="big">2 hrs</div><div class="lbl">Longest single autonomous agent investigation so far</div></div>
+    </div>
+
+    <p class="lead-quote">&ldquo;If you put on the bad actor&rsquo;s hat, it&rsquo;s actually a great time to be running attacks. The average attack is not only executed faster because of AI, but it also captures deeper access due to AI.&rdquo;
+      <cite>&mdash; Alex Dhillon, Founder &amp; CEO, Outtake</cite>
+    </p>
+  </div>
+</section>
+
+<!-- The attack chain -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The problem</div>
+    <h2>Agentic offense needs agentic defense</h2>
+    <p class="body">When targeting a company, attackers move through the same predictable sequence &mdash; now accelerated by AI at every step.</p>
+
+    <div class="figure">
+      <div class="cap">Figure 1 &middot; The digital-trust attack chain</div>
+      <div class="chain">
+        <div class="node attack">
+          <div class="ic">&#128225;</div>
+          <h4>Weaponize public data</h4>
+          <p>Harvest public info about an organization, its executives, and employees.</p>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="node attack">
+          <div class="ic">&#127907;</div>
+          <h4>Build impersonations</h4>
+          <p>Turn intelligence into lures &mdash; fake sites with fraudulent login pages to steal credentials.</p>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="node attack">
+          <div class="ic">&#128273;</div>
+          <h4>Exploit internal systems</h4>
+          <p>Use stolen access to reach the organization&rsquo;s most sensitive assets.</p>
+        </div>
+      </div>
+      <div class="defense-band">Legacy tooling guards only <strong>one slice at a time</strong>. Outtake&rsquo;s Recon Agent investigates the <strong>full network</strong> behind an impersonation.</div>
+    </div>
+
+    <div class="grid3">
+      <div class="card"><span class="slice">Slice 1</span><h3>Threat intelligence tools</h3><p>Monitor the public-data stage &mdash; but stop there.</p></div>
+      <div class="card"><span class="slice">Slice 2</span><h3>Brand protection tools</h3><p>Watch for impersonations &mdash; but don&rsquo;t follow the network.</p></div>
+      <div class="card"><span class="slice">Slice 3</span><h3>Endpoint tools</h3><p>Guard internal systems &mdash; once the attacker is already inside.</p></div>
+    </div>
+
+    <p class="body" style="margin-top:24px;">Instead of just taking down a cloned login page, the Recon Agent gathers and classifies evidence from the impersonation event, follows leads to connected infrastructure (like a fake &ldquo;Customer Support&rdquo; Telegram account), and maps the adversarial network in a graph. Its final report explains the investigation, profiles the threat actor, and reconstructs a timeline of what the attacker did. It can read, write, and run code &mdash; and even interact with malicious login pages to see where stolen credentials actually go.</p>
+
+    <div class="stats">
+      <div class="stat"><div class="big">16 min</div><div class="lbl">Median agent session length</div></div>
+      <div class="stat"><div class="big">1 hr+</div><div class="lbl">Sessions routinely stretch beyond an hour</div></div>
+      <div class="stat"><div class="big">Graph</div><div class="lbl">Adversarial network mapped, not just a single takedown</div></div>
+      <div class="stat"><div class="big">Full chain</div><div class="lbl">Unified across all three attack stages</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Build in 4 stages -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The build</div>
+    <h2>Building a complex long-running agent, in four stages</h2>
+    <p class="body">Each stage was about understanding what a good investigation looked like &mdash; then progressively handing that judgment to the agent.</p>
+
+    <div class="tl">
+      <div class="rail"></div>
+      <div class="step"><div class="dot">1</div><div class="t">Define &ldquo;good&rdquo;</div><h4>Become the expert first</h4><p>Engineers ran real cyber investigations themselves and pulled domain expertise from customers and design partners &mdash; identifying what evidence matters and what separates an actionable conclusion from a guess. That standard became the fixed reference point for every later stage.</p></div>
+      <div class="step"><div class="dot">2</div><div class="t">Validate</div><h4>Prototype in Claude Code</h4><p>The agent needed to write, run code, build tools on the fly, and interact with malicious domains. Claude Code was a strong initial harness to validate those assumptions &mdash; and where they forged their core principle: constrain tightly at the orchestration level, but leave the agent free to improvise when judgment is required.</p></div>
+      <div class="step"><div class="dot">3</div><div class="t">Productionize</div><h4>Graduate to the Agent SDK</h4><p>Carrying over skills and patterns from Claude Code, the team gained tighter control over the Recon Agent&rsquo;s memory, context, and file system &mdash; without reinventing the agent loop or session handling, and without dropping velocity.</p></div>
+      <div class="step"><div class="dot">4</div><div class="t">Iterate</div><h4>Build a tight loop driven by evals</h4><p>Evals were integrated from the very beginning, running many scenarios at once so the team could make sweeping changes &mdash; model upgrades, full memory-system refactors &mdash; safely. When the agent reports it could have done better with a missing tool, a separate coding agent writes it, tests it, and only then does a human check the result.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Learnings -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Learnings</div>
+    <h2>Four lessons from building a long-running agent</h2>
+    <p class="body">Elaborate scripted workflows are being replaced by a harness: a supportive environment of memory, tools, skills, and guardrails.</p>
+
+    <div class="grid2">
+      <div class="learn">
+        <div class="ic">&#128193;</div>
+        <h3>A filesystem and bash is all you need</h3>
+        <p>The filesystem enables memory that survives compaction. Giving the agent open-ended tools &mdash; read, write, run code &mdash; lets it improvise around obstacles. When a tool failed on a network hiccup, the agent simply found a workaround and continued to a successful outcome.</p>
+      </div>
+      <div class="learn">
+        <div class="ic">&#128172;</div>
+        <h3>Prompts are suggestions</h3>
+        <p>&ldquo;As this agent runs longer, every single word in that prompt will probably be ignored eventually.&rdquo; The fix: identify what the agent should <em>always</em> do, and pull it out of the prompt into the harness &mdash; freeing context and attention for where the agent thrives.</p>
+      </div>
+      <div class="learn">
+        <div class="ic">&#9889;</div>
+        <h3>Evals are for speed, not just reliability</h3>
+        <p>Reading a 30-minute agent transcript by hand doesn&rsquo;t scale. An eval is a structured, graded, automatable version of that reflection &mdash; put an agent in the judge&rsquo;s seat to score the run. Even imperfect evals from day one make you build the agent faster.</p>
+      </div>
+      <div class="learn">
+        <div class="ic">&#128737;</div>
+        <h3>Protect your agents</h3>
+        <p>Prompt injection is a real threat, so Outtake builds a &ldquo;blastbox&rdquo; that assumes the agent might get hijacked and contains the damage. They now score trust at the exact moment the agent reaches out to the internet &mdash; the armor agents need on an adversarial web.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Best practices table -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Field guide</div>
+    <h2>Best practices from the Outtake team</h2>
+    <table class="roles">
+      <tr><th style="width:34%;">Ask yourself</th><th>What to do</th></tr>
+      <tr><td class="role">Do you know what &ldquo;good&rdquo; looks like?</td><td>Be the agent first. Run the real task yourself and pull domain expertise from customers and partners, so you have a fixed standard to hold every iteration against.</td></tr>
+      <tr><td class="role">Is each piece of complexity earned?</td><td>Find the simplest working version and automate piece by piece. Add complexity only when results justify it &mdash; the same discipline as traditional software.</td></tr>
+      <tr><td class="role">Is your harness matched to the workload?</td><td>Validate assumptions fast in Claude Code, then graduate to the Agent SDK when you need lower-level control over memory, context, and sessions. Don&rsquo;t rebuild the agent loop yourself.</td></tr>
+      <tr><td class="role">Where should the agent be constrained?</td><td>Hardcode guardrails at the orchestration layer, but don&rsquo;t let those constraints reach into low-level judgment calls. The improvisation space is where the best results come from.</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="border-bottom:none;">
+  <div class="wrap">
+    <div class="callout">
+      <div>
+        <h2>Recon Agent is live today</h2>
+        <p>See how Outtake uses Claude to move from a single impersonation to a full threat-actor profile &mdash; mapping adversarial infrastructure at scale.</p>
+      </div>
+      <a class="btn" href="https://www.outtake.ai/solutions/recon-agent">See Recon Agent &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Explainer artifact generated from the Claude blog &middot; JPM-style design system in Claude clay palette.</p>
+    <p class="src">Source: <a href="https://claude.com/blog/how-outtake-built-a-cyber-investigator-on-claude">How Outtake built a cyber investigator on Claude</a> &mdash; claude.com/blog, July 22, 2026. Part of the &ldquo;How startups build with Claude&rdquo; series.</p>
+  </div>
+</footer>
+
+</body>
+</html>
