@@ -130,12 +130,12 @@
 <section class="subscribe" id="subscribe">
   <div class="wrap">
     <h2>Get new explainers by email</h2>
-    <p class="s">Subscribe and get a short daily email whenever a new AI explainer is published &mdash; no account needed.</p>
+    <p class="s">Subscribe and get an email whenever a new AI explainer is published &mdash; no account needed.</p>
     <form class="subform" method="post" action="https://blogtrottr.com" target="_blank"
       onsubmit="return /\S+@\S+\.\S+/.test(document.getElementById('subeml').value);">
       <input type="email" id="subeml" name="btr_email" placeholder="you@email.com" required>
       <input type="hidden" name="btr_url" value="https://coolsnig.github.io/ai-blog-explainers/feed.xml">
-      <input type="hidden" name="schedule_type" value="6">
+      <input type="hidden" name="schedule_type" value="0">
       <button type="submit">Subscribe</button>
     </form>
     <p class="fine">Delivered by Blogtrottr &middot; you&rsquo;ll get a one-time confirmation email to opt in &middot; unsubscribe anytime.</p>
