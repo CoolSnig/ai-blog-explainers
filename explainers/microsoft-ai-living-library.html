@@ -3,6 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Microsoft&#x27;s AI-Powered Living Library">
+<meta property="og:description" content="The new Theodore Roosevelt Presidential Library uses AI to turn hundreds of thousands of scattered historical documents into a searchable research tool — and a lifelike avatar you can talk to.">
+<meta property="og:url" content="https://coolsnig.github.io/ai-blog-explainers/explainers/microsoft-ai-living-library.html">
+<meta property="og:image" content="https://coolsnig.github.io/ai-blog-explainers/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Microsoft&#x27;s AI-Powered Living Library">
+<meta name="twitter:image" content="https://coolsnig.github.io/ai-blog-explainers/og-image.png">
+
 <title>Microsoft's AI-Powered Living Library — Explainer</title>
 <style>
   :root{
@@ -182,6 +192,32 @@
     <p class="src">Source: <a href="https://news.microsoft.com/signal/articles/ai-theodore-roosevelt-presidential-library/">New AI-powered library lets people meet Theodore Roosevelt in a whole new way</a> &mdash; Microsoft Signal, July 1, 2026. Article by Samantha Kubota.</p>
   </div>
 </footer>
+
+
+<div id="aibe-share" style="position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:9999;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;">
+  <a href="https://news.microsoft.com/signal/articles/ai-theodore-roosevelt-presidential-library/" target="_blank" rel="noopener" title="Read the original article"
+     style="background:#7A3B29;color:#fff;text-decoration:none;font-size:12px;font-weight:700;padding:9px 13px;border-radius:100px;box-shadow:0 6px 18px -8px rgba(0,0,0,.5);text-align:center;">Read original &#8599;</a>
+  <button onclick="aibeCopy()" title="Copy link"
+     style="background:#CC785C;color:#fff;border:none;cursor:pointer;font-size:12px;font-weight:700;padding:9px 13px;border-radius:100px;box-shadow:0 6px 18px -8px rgba(0,0,0,.5);">Copy link</button>
+  <div style="display:flex;gap:8px;">
+    <a id="aibe-li" target="_blank" rel="noopener" title="Share on LinkedIn"
+       style="flex:1;background:#0A66C2;color:#fff;text-decoration:none;font-size:12px;font-weight:700;padding:9px 0;border-radius:100px;text-align:center;box-shadow:0 6px 18px -8px rgba(0,0,0,.5);">in</a>
+    <a id="aibe-x" target="_blank" rel="noopener" title="Share on X"
+       style="flex:1;background:#1F1B18;color:#fff;text-decoration:none;font-size:12px;font-weight:700;padding:9px 0;border-radius:100px;text-align:center;box-shadow:0 6px 18px -8px rgba(0,0,0,.5);">X</a>
+  </div>
+</div>
+<script>
+(function(){
+  var u=encodeURIComponent(location.href), t=encodeURIComponent(document.title.replace(" — Explainer",""));
+  document.getElementById("aibe-li").href="https://www.linkedin.com/sharing/share-offsite/?url="+u;
+  document.getElementById("aibe-x").href="https://twitter.com/intent/tweet?url="+u+"&text="+t;
+})();
+function aibeCopy(){
+  navigator.clipboard.writeText(location.href).then(function(){
+    var b=event.target; var o=b.textContent; b.textContent="Copied!"; setTimeout(function(){b.textContent=o;},1400);
+  });
+}
+</script>
 
 </body>
 </html>

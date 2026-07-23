@@ -5,9 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Blog Explainers — Daily visual digest</title>
 <meta name="description" content="Every new AI announcement from Claude, OpenAI, and Microsoft, turned into a visual explainer.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="AI Blog Explainers" href="feed.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI Blog Explainers">
+<meta property="og:description" content="Every new AI announcement from Claude, OpenAI, and Microsoft, turned into a visual explainer. Updated daily.">
+<meta property="og:url" content="https://coolsnig.github.io/ai-blog-explainers/">
+<meta property="og:image" content="https://coolsnig.github.io/ai-blog-explainers/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI Blog Explainers">
+<meta name="twitter:description" content="Every new AI announcement from Claude, OpenAI, and Microsoft, turned into a visual explainer.">
+<meta name="twitter:image" content="https://coolsnig.github.io/ai-blog-explainers/og-image.png">
 <style>
   :root{
-    --clay:#CC785C;--clay-dark:#A8543C;--clay-deep:#7A3B29;--ink:#1F1B18;--slate:#3D3733;--stone:#6B6259;--cream:#F5F2EC;--paper:#FBFAF6;--sand:#EDE7DB;--line:#DED6C7;
+    --clay:#CC785C;--clay-dark:#A8543C;--clay-deep:#7A3B29;--ink:#1F1B18;--slate:#3D3733;--stone:#6B6259;--cream:#F5F2EC;--paper:#FBFAF6;--sand:#EDE7DB;--line:#DED6C7;--gold:#B9975B;
     --serif:'Georgia','Times New Roman',serif;--sans:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -17,17 +28,21 @@
   .topbar .wrap{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;}
   .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.02em;font-size:17px;}
   .brand .dot{width:28px;height:28px;border-radius:7px;background:var(--clay);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-family:var(--serif);font-size:17px;}
-  .brand .b2{color:var(--stone);font-weight:400;}
-  .kicker{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--clay-dark);font-weight:700;}
+  .toplinks{display:flex;align-items:center;gap:16px;}
+  .toplinks a{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay-dark);font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+  .toplinks a:hover{color:var(--clay);}
   .hero{background:linear-gradient(155deg,#2A211C 0%,#4A342A 55%,var(--clay-deep) 100%);color:#F5EFE7;padding:66px 0 60px;}
   .hero .wrap{max-width:900px;}
   .hero .tag{display:inline-block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#E9C6B5;border:1px solid rgba(233,198,181,.4);padding:5px 13px;border-radius:100px;margin-bottom:20px;}
   .hero h1{font-family:var(--serif);font-size:clamp(34px,5.4vw,56px);line-height:1.06;font-weight:700;margin-bottom:16px;}
   .hero p{font-size:clamp(16px,2.1vw,20px);color:#EADFD3;max-width:640px;}
+  .hero .about{margin-top:18px;font-size:13.5px;color:#D6C3B4;max-width:640px;}
   main{padding:44px 0 60px;}
-  .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin-bottom:18px;}
+  .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:baseline;justify-content:space-between;margin-bottom:6px;}
   h2.sec{font-family:var(--serif);font-size:24px;}
-  .search{width:280px;max-width:100%;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:10px 14px;font-size:14px;color:var(--ink);}
+  .count{font-size:13px;color:var(--stone);}
+  .searchrow{margin:14px 0 4px;}
+  .search{width:320px;max-width:100%;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:10px 14px;font-size:14px;color:var(--ink);}
   .search::placeholder{color:var(--stone);}
   .search:focus{outline:none;border-color:var(--clay);}
   .filterlabel{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);font-weight:700;margin:16px 0 8px;}
@@ -39,11 +54,12 @@
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:28px;}
   @media(max-width:900px){.grid{grid-template-columns:1fr 1fr;}}
   @media(max-width:620px){.grid{grid-template-columns:1fr;}}
-  .card{display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:24px;text-decoration:none;color:inherit;transition:box-shadow .18s,transform .18s;}
+  .card{display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:24px;text-decoration:none;color:inherit;transition:box-shadow .18s,transform .18s;position:relative;}
   .card:hover{box-shadow:0 14px 34px -20px rgba(122,59,41,.45);transform:translateY(-2px);}
   .card .row{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
   .badge{font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#fff;padding:4px 10px;border-radius:100px;}
   .cat{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay-dark);font-weight:700;}
+  .newpill{margin-left:auto;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:#fff;background:var(--gold);padding:3px 9px;border-radius:100px;}
   .card h3{font-family:var(--serif);font-size:20px;line-height:1.22;margin-bottom:10px;color:var(--ink);}
   .card:hover h3{color:var(--clay-deep);}
   .card .meta{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--stone);margin-bottom:12px;}
@@ -53,6 +69,7 @@
   .empty{text-align:center;color:var(--stone);font-size:14px;padding:50px 0;}
   footer{border-top:1px solid var(--line);background:var(--paper);}
   footer .wrap{padding:22px 24px;color:var(--stone);font-size:12.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  footer a{color:var(--clay-dark);}
 </style>
 </head>
 <body>
@@ -60,7 +77,9 @@
 <div class="topbar">
   <div class="wrap">
     <div class="brand"><span class="dot">&#10039;</span> AI Blog Explainers</div>
-    <div class="kicker">Daily digest</div>
+    <div class="toplinks">
+      <a href="feed.xml" title="Subscribe via RSS">&#128225; RSS</a>
+    </div>
   </div>
 </div>
 
@@ -69,6 +88,7 @@
     <span class="tag">Editorial &middot; Updated daily</span>
     <h1>AI Blog Explainers</h1>
     <p>Every new AI announcement from Claude, OpenAI, and Microsoft &mdash; turned into a visual explainer.</p>
+    <p class="about">A daily digest: each new post from these companies&rsquo; blogs is auto-summarized into a one-page visual explainer. Filter by source or topic, or subscribe via RSS.</p>
   </div>
 </header>
 
@@ -76,7 +96,10 @@
   <div class="wrap">
     <div class="controls">
       <h2 class="sec">Latest explainers</h2>
-      <input id="search" class="search" type="search" placeholder="Search explainers&hellip;" oninput="render()">
+      <span class="count" id="count"></span>
+    </div>
+    <div class="searchrow">
+      <input id="search" class="search" type="search" placeholder="Search explainers&hellip;" oninput="onSearch()">
     </div>
 
     <div class="filterlabel">Source</div>
@@ -92,7 +115,7 @@
 
 <footer>
   <div class="wrap">
-    <span>AI Blog Explainers &middot; independent editorial digest.</span>
+    <span>AI Blog Explainers &middot; independent editorial digest &middot; <a href="feed.xml">RSS</a></span>
     <span>Source posts &copy; their respective owners (Anthropic, OpenAI, Microsoft).</span>
   </div>
 </footer>
@@ -101,6 +124,7 @@
 const SOURCE_COLORS = {
   "Claude":"#CC785C", "OpenAI":"#0F9D77", "Microsoft 365":"#0067B8", "Microsoft AI":"#5A5AD6"
 };
+const NEW_DAYS = 3;
 
 const POSTS = [
   {
@@ -135,57 +159,79 @@ const POSTS = [
   }
 ];
 
+const LS = "aibe_filters";
 let activeSource = "All sources";
 let activeCat = "All";
+let query = "";
 
+try{
+  const s = JSON.parse(localStorage.getItem(LS) || "{}");
+  if(s.source) activeSource = s.source;
+  if(s.cat) activeCat = s.cat;
+  if(s.query) query = s.query;
+}catch(e){}
+
+function save(){
+  try{ localStorage.setItem(LS, JSON.stringify({source:activeSource, cat:activeCat, query})); }catch(e){}
+}
 function fmtDate(iso){
   return new Date(iso+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+}
+function isNew(iso){
+  const d = new Date(iso+"T00:00:00");
+  const days = (Date.now() - d.getTime())/(1000*60*60*24);
+  return days >= 0 && days <= NEW_DAYS;
 }
 
 function buildChips(){
   const sources = ["All sources", ...Array.from(new Set(POSTS.map(p=>p.source)))];
   const cats = ["All", ...Array.from(new Set(POSTS.map(p=>p.category)))];
-  const sc = document.getElementById("sourceChips");
-  sc.innerHTML = sources.map(s=>{
+  document.getElementById("sourceChips").innerHTML = sources.map(s=>{
     const acc = SOURCE_COLORS[s] || "#CC785C";
-    return `<button class="chip" data-accent style="--acc:${acc}" onclick="setSource('${s.replace(/'/g,"\\'")}')">${s}</button>`;
+    return '<button class="chip" data-accent style="--acc:'+acc+'" onclick="setSource(this.textContent)">'+s+'</button>';
   }).join("");
-  const cc = document.getElementById("catChips");
-  cc.innerHTML = cats.map(c=>`<button class="chip" onclick="setCat('${c.replace(/'/g,"\\'")}')">${c}</button>`).join("");
+  document.getElementById("catChips").innerHTML = cats.map(c=>'<button class="chip" onclick="setCat(this.textContent)">'+c+'</button>').join("");
   syncChips();
 }
-function setSource(s){ activeSource=s; syncChips(); render(); }
-function setCat(c){ activeCat=c; syncChips(); render(); }
+function setSource(s){ activeSource=s; save(); syncChips(); render(); }
+function setCat(c){ activeCat=c; save(); syncChips(); render(); }
+function onSearch(){ query = document.getElementById("search").value; save(); render(); }
 function syncChips(){
   document.querySelectorAll("#sourceChips .chip").forEach(el=>el.classList.toggle("active", el.textContent===activeSource));
   document.querySelectorAll("#catChips .chip").forEach(el=>el.classList.toggle("active", el.textContent===activeCat));
 }
 
 function render(){
-  const q = (document.getElementById("search").value||"").trim().toLowerCase();
+  const q = (query||"").trim().toLowerCase();
   const list = [...POSTS]
     .sort((a,b)=> a.date<b.date?1:-1)
     .filter(p=> activeSource==="All sources" ? true : p.source===activeSource)
     .filter(p=> activeCat==="All" ? true : p.category===activeCat)
     .filter(p=> q==="" ? true : (p.title+" "+p.summary+" "+p.source+" "+p.category).toLowerCase().includes(q));
 
-  const grid = document.getElementById("grid");
+  document.getElementById("count").textContent =
+    list.length + (list.length===1 ? " explainer" : " explainers") +
+    (POSTS.length!==list.length ? " of " + POSTS.length : "");
+
   document.getElementById("empty").style.display = list.length? "none":"block";
-  grid.innerHTML = list.map(p=>{
+  document.getElementById("grid").innerHTML = list.map(p=>{
     const acc = SOURCE_COLORS[p.source] || "#CC785C";
-    return `<a class="card" href="explainers/${p.slug}.html">
-      <div class="row">
-        <span class="badge" style="background:${acc}">${p.source}</span>
-        <span class="cat">${p.category}</span>
-      </div>
-      <h3>${p.title}</h3>
-      <div class="meta"><span>${fmtDate(p.date)}</span><span class="rt">${p.readingTime}</span></div>
-      <p class="sum">${p.summary}</p>
-      <span class="cta">Read explainer &rarr;</span>
-    </a>`;
+    const newTag = isNew(p.date) ? '<span class="newpill">New</span>' : "";
+    return '<a class="card" href="explainers/'+p.slug+'.html">'
+      + '<div class="row">'
+      + '<span class="badge" style="background:'+acc+'">'+p.source+'</span>'
+      + '<span class="cat">'+p.category+'</span>'
+      + newTag
+      + '</div>'
+      + '<h3>'+p.title+'</h3>'
+      + '<div class="meta"><span>'+fmtDate(p.date)+'</span><span class="rt">'+p.readingTime+'</span></div>'
+      + '<p class="sum">'+p.summary+'</p>'
+      + '<span class="cta">Read explainer &rarr;</span>'
+      + '</a>';
   }).join("");
 }
 
+document.getElementById("search").value = query;
 buildChips();
 render();
 </script>
