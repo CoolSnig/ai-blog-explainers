@@ -112,7 +112,7 @@
     <div class="chips" id="catChips"></div>
 
     <div class="grid" id="grid"></div>
-    <div class="empty" id="empty" style="display:none;">No explainers match your filters.</div>
+    <div class="empty" id="empty" style="display:none;">No explainers match your filters. <a href="#" onclick="resetFilters();return false;" style="color:var(--clay-dark);font-weight:700;">Clear filters</a></div>
   </div>
 </main>
 
@@ -173,12 +173,7 @@ let activeSource = "All sources";
 let activeCat = "All";
 let query = "";
 
-try{
-  const s = JSON.parse(localStorage.getItem(LS) || "{}");
-  if(s.source) activeSource = s.source;
-  if(s.cat) activeCat = s.cat;
-  if(s.query) query = s.query;
-}catch(e){}
+try{ localStorage.removeItem(LS); }catch(e){}
 
 function save(){
   try{ localStorage.setItem(LS, JSON.stringify({source:activeSource, cat:activeCat, query})); }catch(e){}
@@ -210,6 +205,7 @@ function syncChips(){
   document.querySelectorAll("#catChips .chip").forEach(el=>el.classList.toggle("active", el.textContent===activeCat));
 }
 
+function resetFilters(){ activeSource="All sources"; activeCat="All"; query=""; document.getElementById("search").value=""; try{localStorage.removeItem(LS);}catch(e){} syncChips(); render(); }
 function render(){
   const q = (query||"").trim().toLowerCase();
   const list = [...POSTS]
