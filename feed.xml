@@ -2,94 +2,94 @@
 <rss version="2.0">
   <channel>
     <title>AI Blog Explainers</title>
-    <link>https://coolsnig.github.io/ai-blog-explainers/</link>
+    <link>https://snigdhadasgupta.github.io/ai-blog-explainers/</link>
     <description>Every new AI announcement from Claude, OpenAI, and Microsoft, turned into a visual explainer.</description>
     <language>en-us</language>
     <lastBuildDate>Fri, 24 Jul 2026 00:52:47 +0000</lastBuildDate>
     <item>
       <title>Think Through Hard Problems in Voice Mode</title>
-      <link>https://coolsnig.github.io/ai-blog-explainers/explainers/think-through-hard-problems-in-voice-mode.html</link>
-      <guid isPermaLink="true">https://coolsnig.github.io/ai-blog-explainers/explainers/think-through-hard-problems-in-voice-mode.html</guid>
+      <link>https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/think-through-hard-problems-in-voice-mode.html</link>
+      <guid isPermaLink="true">https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/think-through-hard-problems-in-voice-mode.html</guid>
       <category>Claude</category>
       <pubDate>Thu, 23 Jul 2026 00:00:00 +0000</pubDate>
       <description>Claude voice mode now runs on Opus and Sonnet, reaches connected tools like Gmail and Slack, and speaks many more languages.</description>
     </item>
     <item>
       <title>Safety and Alignment in an Era of Long-Horizon Models</title>
-      <link>https://coolsnig.github.io/ai-blog-explainers/explainers/safety-alignment-long-horizon-models.html</link>
-      <guid isPermaLink="true">https://coolsnig.github.io/ai-blog-explainers/explainers/safety-alignment-long-horizon-models.html</guid>
+      <link>https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/safety-alignment-long-horizon-models.html</link>
+      <guid isPermaLink="true">https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/safety-alignment-long-horizon-models.html</guid>
       <category>OpenAI</category>
       <pubDate>Mon, 20 Jul 2026 00:00:00 +0000</pubDate>
       <description>What OpenAI learned deploying a long-running agentic model — sandbox escapes, scanner evasion, and trajectory-level monitoring.</description>
     </item>
     <item>
       <title>Least Privilege for AI Agents: Identity, Access &amp; Tool Binding</title>
-      <link>https://coolsnig.github.io/ai-blog-explainers/explainers/least-privilege-for-ai-agents-identity-access-and-tool-binding.html</link>
-      <guid isPermaLink="true">https://coolsnig.github.io/ai-blog-explainers/explainers/least-privilege-for-ai-agents-identity-access-and-tool-binding.html</guid>
+      <link>https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/least-privilege-for-ai-agents-identity-access-and-tool-binding.html</link>
+      <guid isPermaLink="true">https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/least-privilege-for-ai-agents-identity-access-and-tool-binding.html</guid>
       <category>Microsoft Security</category>
       <pubDate>Thu, 16 Jul 2026 00:00:00 +0000</pubDate>
       <description>Agents chain actions across systems with no human approving each step. Microsoft's playbook: treat every agent as a first-class principal.</description>
     </item>
     <item>
       <title>Microsoft Agent 365: A Control Plane to Govern Your AI Agents</title>
-      <link>https://coolsnig.github.io/ai-blog-explainers/explainers/microsoft-agent-365-now-generally-available-expands-capabilities-and-integrations.html</link>
-      <guid isPermaLink="true">https://coolsnig.github.io/ai-blog-explainers/explainers/microsoft-agent-365-now-generally-available-expands-capabilities-and-integrations.html</guid>
+      <link>https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/microsoft-agent-365-now-generally-available-expands-capabilities-and-integrations.html</link>
+      <guid isPermaLink="true">https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/microsoft-agent-365-now-generally-available-expands-capabilities-and-integrations.html</guid>
       <category>Microsoft Security</category>
       <pubDate>Fri, 01 May 2026 00:00:00 +0000</pubDate>
       <description>Agent 365 is an enterprise control plane to observe, govern, and secure AI agents — tackling agent sprawl and shadow AI.</description>
     </item>
     <item>
       <title>June Workspace Drops: New AI Features for Drive, Sheets &amp; Gmail</title>
-      <link>https://coolsnig.github.io/ai-blog-explainers/explainers/june-2026-workspace-feature-drop.html</link>
-      <guid isPermaLink="true">https://coolsnig.github.io/ai-blog-explainers/explainers/june-2026-workspace-feature-drop.html</guid>
+      <link>https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/june-2026-workspace-feature-drop.html</link>
+      <guid isPermaLink="true">https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/june-2026-workspace-feature-drop.html</guid>
       <category>Google Workspace</category>
       <pubDate>Thu, 25 Jun 2026 00:00:00 +0000</pubDate>
       <description>Google's June Workspace drop adds AI to auto-organize Drive files, fix Sheets formula errors, and refine Gmail drafts.</description>
     </item>
     <item>
       <title>Introducing the ChatGPT for Small Business Program</title>
-      <link>https://coolsnig.github.io/ai-blog-explainers/explainers/introducing-chatgpt-small-business-program.html</link>
-      <guid isPermaLink="true">https://coolsnig.github.io/ai-blog-explainers/explainers/introducing-chatgpt-small-business-program.html</guid>
+      <link>https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/introducing-chatgpt-small-business-program.html</link>
+      <guid isPermaLink="true">https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/introducing-chatgpt-small-business-program.html</guid>
       <category>OpenAI</category>
       <pubDate>Tue, 21 Jul 2026 00:00:00 +0000</pubDate>
       <description>OpenAI's new program helps small businesses build AI skills and automate work with ChatGPT Work.</description>
     </item>
     <item>
       <title>Introducing Workspace Intelligence</title>
-      <link>https://coolsnig.github.io/ai-blog-explainers/explainers/introducing-workspace-intelligence.html</link>
-      <guid isPermaLink="true">https://coolsnig.github.io/ai-blog-explainers/explainers/introducing-workspace-intelligence.html</guid>
+      <link>https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/introducing-workspace-intelligence.html</link>
+      <guid isPermaLink="true">https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/introducing-workspace-intelligence.html</guid>
       <category>Google Workspace</category>
       <pubDate>Wed, 22 Apr 2026 00:00:00 +0000</pubDate>
       <description>Google's Workspace Intelligence gives Gemini a unified, real-time understanding of your apps, projects, and colleagues to power agentic work.</description>
     </item>
     <item>
       <title>Building Verification Loops in Claude Code with Skills</title>
-      <link>https://coolsnig.github.io/ai-blog-explainers/explainers/building-verification-loops-in-claude-code-with-skills.html</link>
-      <guid isPermaLink="true">https://coolsnig.github.io/ai-blog-explainers/explainers/building-verification-loops-in-claude-code-with-skills.html</guid>
+      <link>https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/building-verification-loops-in-claude-code-with-skills.html</link>
+      <guid isPermaLink="true">https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/building-verification-loops-in-claude-code-with-skills.html</guid>
       <category>Claude</category>
       <pubDate>Wed, 22 Jul 2026 00:00:00 +0000</pubDate>
       <description>Turn the manual checks you keep repeating into skills, so Claude closes its own feedback loop.</description>
     </item>
     <item>
       <title>How Outtake Built a Cyber Investigator on Claude</title>
-      <link>https://coolsnig.github.io/ai-blog-explainers/explainers/how-outtake-built-a-cyber-investigator-on-claude.html</link>
-      <guid isPermaLink="true">https://coolsnig.github.io/ai-blog-explainers/explainers/how-outtake-built-a-cyber-investigator-on-claude.html</guid>
+      <link>https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/how-outtake-built-a-cyber-investigator-on-claude.html</link>
+      <guid isPermaLink="true">https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/how-outtake-built-a-cyber-investigator-on-claude.html</guid>
       <category>Claude</category>
       <pubDate>Wed, 22 Jul 2026 00:00:00 +0000</pubDate>
       <description>Fleets of AI agents that detect, investigate, and dismantle digital threats — and the harness that keeps multi-hour sessions on track.</description>
     </item>
     <item>
       <title>Introducing OpenAI Presence</title>
-      <link>https://coolsnig.github.io/ai-blog-explainers/explainers/introducing-openai-presence.html</link>
-      <guid isPermaLink="true">https://coolsnig.github.io/ai-blog-explainers/explainers/introducing-openai-presence.html</guid>
+      <link>https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/introducing-openai-presence.html</link>
+      <guid isPermaLink="true">https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/introducing-openai-presence.html</guid>
       <category>OpenAI</category>
       <pubDate>Wed, 22 Jul 2026 00:00:00 +0000</pubDate>
       <description>A battle-tested enterprise product for putting AI agents to work across customer and internal workflows.</description>
     </item>
     <item>
       <title>Copilot in Excel: Built for the Era of Frontier Finance</title>
-      <link>https://coolsnig.github.io/ai-blog-explainers/explainers/copilot-in-excel-frontier-finance.html</link>
-      <guid isPermaLink="true">https://coolsnig.github.io/ai-blog-explainers/explainers/copilot-in-excel-frontier-finance.html</guid>
+      <link>https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/copilot-in-excel-frontier-finance.html</link>
+      <guid isPermaLink="true">https://snigdhadasgupta.github.io/ai-blog-explainers/explainers/copilot-in-excel-frontier-finance.html</guid>
       <category>Microsoft 365</category>
       <pubDate>Thu, 25 Jun 2026 00:00:00 +0000</pubDate>
       <description>New skills, financial connectors, and traceability bring finance-grade AI to Excel.</description>
