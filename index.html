@@ -54,6 +54,17 @@
   .chip:hover{border-color:var(--clay);color:var(--clay-dark);}
   .chip.active{background:var(--clay);border-color:var(--clay);color:#fff;}
   .chip.active[data-accent]{background:var(--acc);border-color:var(--acc);}
+  .groupsec{border:1px solid var(--line);border-radius:12px;margin-top:12px;background:var(--paper);overflow:hidden;}
+  .groupsec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:11px;padding:13px 18px;font-weight:700;color:var(--ink);user-select:none;}
+  .groupsec>summary::-webkit-details-marker{display:none;}
+  .groupsec>summary:hover{background:var(--cream);}
+  .groupsec>summary .gtitle{font-family:var(--serif);font-size:16.5px;}
+  .groupsec>summary .gcount{font-size:11px;font-weight:700;color:var(--stone);background:var(--sand);border:1px solid var(--line);border-radius:100px;padding:2px 9px;}
+  .groupsec>summary .gdot{width:11px;height:11px;border-radius:50%;flex:none;}
+  .groupsec>summary .chev{margin-left:auto;transition:transform .2s;color:var(--stone);font-size:12px;}
+  .groupsec[open]>summary .chev{transform:rotate(90deg);}
+  .grows{padding:0 14px 4px;}
+  .grows .rowitem:last-child{border-bottom:none;}
   /* featured cards */
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:26px;}
   @media(max-width:900px){.grid{grid-template-columns:1fr 1fr;}}
@@ -127,10 +138,15 @@
     <div class="chips" id="sourceChips"></div>
     <div class="filterlabel">Category</div>
     <div class="chips" id="catChips"></div>
+    <div class="filterlabel">Group by</div>
+    <div class="chips" id="groupChips">
+      <button class="chip active" data-group="date" onclick="setGroup('date')">By month</button>
+      <button class="chip" data-group="company" onclick="setGroup('company')">By company</button>
+    </div>
 
     <div class="grid" id="grid"></div>
-    <h3 class="morehead" id="morehead" style="display:none;">More explainers</h3>
-    <div class="rows" id="list"></div>
+    <h3 class="morehead" id="morehead" style="display:none;">Browse the archive</h3>
+    <div id="groups"></div>
     <div class="empty" id="empty" style="display:none;">No explainers match your filters. <a href="#" onclick="resetFilters();return false;" style="color:var(--clay-dark);font-weight:700;">Clear filters</a></div>
   </div>
 </main>
@@ -178,32 +194,37 @@ const POSTS = [
   {slug:"introducing-workspace-intelligence",title:"Introducing Workspace Intelligence",date:"2026-04-22",source:"Google Workspace",category:"Productivity",readingTime:"5 min",summary:"Google's Workspace Intelligence gives Gemini a unified, real-time understanding of your apps, projects, and colleagues — powering agentic work across Chat, Docs, Sheets, Slides, Gmail, and Drive."}
 ];
 
-const LS="aibe_filters";
-let activeSource="All sources", activeCat="All", query="";
-try{ localStorage.removeItem(LS); }catch(e){}
+let activeSource="All sources", activeCat="All", activeGroup="date", query="";
 
 function fmtDate(iso){ return new Date(iso+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}); }
 function isNew(iso){ var d=new Date(iso+"T00:00:00"); var days=(Date.now()-d.getTime())/(1000*60*60*24); return days>=0&&days<=NEW_DAYS; }
+function countBy(dim,val){ return POSTS.filter(function(p){return dim==="source"?p.source===val:p.category===val;}).length; }
 
 function buildChips(){
-  var sources=["All sources"].concat(Array.from(new Set(POSTS.map(function(p){return p.source;}))));
-  var cats=["All"].concat(Array.from(new Set(POSTS.map(function(p){return p.category;}))));
-  document.getElementById("sourceChips").innerHTML=sources.map(function(s){
+  var sources=Array.from(new Set(POSTS.map(function(p){return p.source;})));
+  var cats=Array.from(new Set(POSTS.map(function(p){return p.category;})));
+  var srcHtml='<button class="chip" data-val="All sources" onclick="setSource(this.dataset.val)">All sources ('+POSTS.length+')</button>';
+  srcHtml+=sources.map(function(s){
     var acc=SOURCE_COLORS[s]||"#CC785C";
-    return '<button class="chip" data-accent style="--acc:'+acc+'" onclick="setSource(this.textContent)">'+s+'</button>';
+    return '<button class="chip" data-accent data-val="'+s+'" style="--acc:'+acc+'" onclick="setSource(this.dataset.val)">'+s+' ('+countBy("source",s)+')</button>';
   }).join("");
-  document.getElementById("catChips").innerHTML=cats.map(function(c){
-    return '<button class="chip" onclick="setCat(this.textContent)">'+c+'</button>';
+  document.getElementById("sourceChips").innerHTML=srcHtml;
+  var catHtml='<button class="chip" data-val="All" onclick="setCat(this.dataset.val)">All ('+POSTS.length+')</button>';
+  catHtml+=cats.map(function(c){
+    return '<button class="chip" data-val="'+c+'" onclick="setCat(this.dataset.val)">'+c+' ('+countBy("category",c)+')</button>';
   }).join("");
+  document.getElementById("catChips").innerHTML=catHtml;
   syncChips();
 }
 function setSource(s){ activeSource=s; syncChips(); render(); }
 function setCat(c){ activeCat=c; syncChips(); render(); }
+function setGroup(g){ activeGroup=g; syncChips(); render(); }
 function onSearch(){ query=document.getElementById("search").value; render(); }
 function resetFilters(){ activeSource="All sources"; activeCat="All"; query=""; document.getElementById("search").value=""; syncChips(); render(); }
 function syncChips(){
-  document.querySelectorAll("#sourceChips .chip").forEach(function(el){el.classList.toggle("active",el.textContent===activeSource);});
-  document.querySelectorAll("#catChips .chip").forEach(function(el){el.classList.toggle("active",el.textContent===activeCat);});
+  document.querySelectorAll("#sourceChips .chip").forEach(function(el){el.classList.toggle("active",el.dataset.val===activeSource);});
+  document.querySelectorAll("#catChips .chip").forEach(function(el){el.classList.toggle("active",el.dataset.val===activeCat);});
+  document.querySelectorAll("#groupChips .chip").forEach(function(el){el.classList.toggle("active",el.dataset.group===activeGroup);});
 }
 
 function cardHTML(p){
@@ -224,6 +245,26 @@ function rowHTML(p){
     +'<span class="rtitle">'+p.title+'</span>'
     +'<span class="rmeta"><span class="rcat">'+p.category+'</span><span class="rdate">'+fmtDate(p.date)+'</span>'+nt+'</span></a>';
 }
+function groupRows(rest){
+  if(!rest.length) return "";
+  var groups={}, order=[];
+  rest.forEach(function(p){
+    var key,label;
+    if(activeGroup==="company"){ key=p.source; label=p.source; }
+    else { key=p.date.slice(0,7); label=new Date(p.date+"T00:00:00").toLocaleDateString("en-US",{month:"long",year:"numeric"}); }
+    if(!groups[key]){ groups[key]={label:label,items:[],source:p.source,maxdate:p.date}; order.push(key); }
+    groups[key].items.push(p);
+    if(p.date>groups[key].maxdate) groups[key].maxdate=p.date;
+  });
+  order.sort(function(a,b){ return groups[a].maxdate<groups[b].maxdate?1:-1; });
+  return order.map(function(k,i){
+    var g=groups[k];
+    var dot = activeGroup==="company" ? '<span class="gdot" style="background:'+(SOURCE_COLORS[g.source]||"#CC785C")+'"></span>' : '';
+    var open = i===0 ? ' open' : '';
+    return '<details class="groupsec"'+open+'><summary>'+dot+'<span class="gtitle">'+g.label+'</span><span class="gcount">'+g.items.length+'</span><span class="chev">&#9656;</span></summary>'
+      +'<div class="grows">'+g.items.map(rowHTML).join("")+'</div></details>';
+  }).join("");
+}
 
 function render(){
   var q=(query||"").trim().toLowerCase();
@@ -235,8 +276,10 @@ function render(){
   var featured=list.slice(0,3), rest=list.slice(3);
   document.getElementById("empty").style.display=list.length?"none":"block";
   document.getElementById("grid").innerHTML=featured.map(cardHTML).join("");
-  document.getElementById("list").innerHTML=rest.map(rowHTML).join("");
-  document.getElementById("morehead").style.display=rest.length?"block":"none";
+  document.getElementById("groups").innerHTML=groupRows(rest);
+  var mh=document.getElementById("morehead");
+  mh.textContent = activeGroup==="company" ? "Browse by company" : "Browse by month";
+  mh.style.display=rest.length?"block":"none";
 }
 
 buildChips();
