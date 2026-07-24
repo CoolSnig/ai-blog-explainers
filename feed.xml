@@ -5,7 +5,15 @@
     <link>https://coolsnig.github.io/ai-blog-explainers/</link>
     <description>Every new AI announcement from Claude, OpenAI, and Microsoft, turned into a visual explainer.</description>
     <language>en-us</language>
-    <lastBuildDate>Thu, 23 Jul 2026 12:35:57 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 24 Jul 2026 00:52:47 +0000</lastBuildDate>
+    <item>
+      <title>Think Through Hard Problems in Voice Mode</title>
+      <link>https://coolsnig.github.io/ai-blog-explainers/explainers/think-through-hard-problems-in-voice-mode.html</link>
+      <guid isPermaLink="true">https://coolsnig.github.io/ai-blog-explainers/explainers/think-through-hard-problems-in-voice-mode.html</guid>
+      <category>Claude</category>
+      <pubDate>Thu, 23 Jul 2026 00:00:00 +0000</pubDate>
+      <description>Claude voice mode now runs on Opus and Sonnet, reaches connected tools like Gmail and Slack, and speaks many more languages.</description>
+    </item>
     <item>
       <title>Safety and Alignment in an Era of Long-Horizon Models</title>
       <link>https://coolsnig.github.io/ai-blog-explainers/explainers/safety-alignment-long-horizon-models.html</link>
@@ -13,6 +21,14 @@
       <category>OpenAI</category>
       <pubDate>Mon, 20 Jul 2026 00:00:00 +0000</pubDate>
       <description>What OpenAI learned deploying a long-running agentic model — sandbox escapes, scanner evasion, and trajectory-level monitoring.</description>
+    </item>
+    <item>
+      <title>Least Privilege for AI Agents: Identity, Access &amp; Tool Binding</title>
+      <link>https://coolsnig.github.io/ai-blog-explainers/explainers/least-privilege-for-ai-agents-identity-access-and-tool-binding.html</link>
+      <guid isPermaLink="true">https://coolsnig.github.io/ai-blog-explainers/explainers/least-privilege-for-ai-agents-identity-access-and-tool-binding.html</guid>
+      <category>Microsoft Security</category>
+      <pubDate>Thu, 16 Jul 2026 00:00:00 +0000</pubDate>
+      <description>Agents chain actions across systems with no human approving each step. Microsoft's playbook: treat every agent as a first-class principal.</description>
     </item>
     <item>
       <title>Microsoft Agent 365: A Control Plane to Govern Your AI Agents</title>

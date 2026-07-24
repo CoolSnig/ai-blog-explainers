@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Think Through Hard Problems in Voice Mode">
+<meta property="og:description" content="Claude voice mode now runs on Opus and Sonnet, reaches the tools you've connected like Gmail and Slack, and speaks many more languages.">
+<meta property="og:url" content="https://coolsnig.github.io/ai-blog-explainers/explainers/think-through-hard-problems-in-voice-mode.html">
+<meta property="og:image" content="https://coolsnig.github.io/ai-blog-explainers/og-image.png">
+<meta property="og:image:secure_url" content="https://coolsnig.github.io/ai-blog-explainers/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Think Through Hard Problems in Voice Mode">
+<meta name="twitter:image" content="https://coolsnig.github.io/ai-blog-explainers/og-image.png">
+<title>Voice Mode on Opus &amp; Sonnet — Explainer</title>
+<style>
+  :root{
+    --clay:#CC785C;--clay-dark:#A8543C;--clay-deep:#7A3B29;--ink:#1F1B18;--slate:#3D3733;--stone:#6B6259;--cream:#F5F2EC;--paper:#FBFAF6;--sand:#EDE7DB;--line:#DED6C7;
+    --accent:#CC785C;--accent-deep:#A8543C;
+    --serif:'Georgia','Times New Roman',serif;--sans:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;--mono:'SFMono-Regular','Consolas','Menlo',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  .topbar{border-top:5px solid var(--clay);background:var(--paper);border-bottom:1px solid var(--line);}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.02em;}
+  .brand .dot{width:26px;height:26px;border-radius:6px;background:var(--clay);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-family:var(--serif);font-size:16px;}
+  .srcbadge{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--accent);padding:5px 12px;border-radius:100px;}
+  .hero{background:linear-gradient(160deg,#241C18 0%,#5A3324 55%,var(--accent-deep) 100%);color:#F5EFE7;padding:64px 0 56px;}
+  .hero .wrap{max-width:900px;}
+  .hero .tag{display:inline-block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#F0C9B8;border:1px solid rgba(240,201,184,.4);padding:5px 12px;border-radius:100px;margin-bottom:22px;}
+  .hero h1{font-family:var(--serif);font-size:clamp(30px,4.6vw,50px);line-height:1.09;font-weight:700;margin-bottom:18px;}
+  .hero p.lede{font-size:clamp(17px,2.2vw,21px);color:#EFE1D8;max-width:720px;}
+  .meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:34px;padding-top:22px;border-top:1px solid rgba(245,239,231,.18);font-size:13px;}
+  .meta .m span{display:block;color:#D8AE9C;letter-spacing:.12em;text-transform:uppercase;font-size:10.5px;margin-bottom:3px;}
+  .meta .m strong{font-weight:600;color:#F7EEE7;font-size:14px;}
+  section{padding:52px 0;border-bottom:1px solid var(--line);}
+  .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-deep);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--accent);display:inline-block;}
+  h2{font-family:var(--serif);font-size:clamp(24px,3.4vw,34px);line-height:1.15;margin-bottom:16px;color:var(--ink);}
+  h3{font-size:19px;margin-bottom:8px;color:var(--slate);}
+  p.body{font-size:16.5px;color:var(--slate);margin-bottom:16px;max-width:760px;}
+  .lead-quote{font-family:var(--serif);font-size:20px;line-height:1.42;color:var(--accent-deep);border-left:4px solid var(--accent);padding:6px 0 6px 22px;margin:26px 0;max-width:730px;}
+  .tldr{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:28px 30px;}
+  .tldr h2{font-size:20px;margin-bottom:14px;}
+  .tldr ul{list-style:none;}
+  .tldr li{position:relative;padding-left:30px;margin-bottom:11px;font-size:15.5px;color:var(--slate);}
+  .tldr li::before{content:"";position:absolute;left:0;top:8px;width:14px;height:14px;border-radius:4px;background:var(--accent);}
+  .figure{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:30px;margin:28px 0;}
+  .figure .cap{font-size:12.5px;color:var(--stone);text-transform:uppercase;letter-spacing:.1em;margin-bottom:20px;font-weight:700;}
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;align-items:stretch;}
+  @media(max-width:820px){.flow{grid-template-columns:1fr 1fr;}}
+  .fstep{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:14px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;}
+  .fstep .n{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:8px;}
+  .fstep h4{font-size:12.5px;margin-bottom:4px;color:var(--ink);line-height:1.2;}
+  .fstep p{font-size:11px;color:var(--stone);line-height:1.35;}
+  .loopnote{text-align:center;margin-top:14px;font-size:13px;color:var(--accent-deep);font-weight:600;font-style:italic;}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:8px;}
+  @media(max-width:820px){.grid3{grid-template-columns:1fr;}}
+  .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:8px;}
+  @media(max-width:820px){.grid2{grid-template-columns:1fr;}}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px;}
+  .card h3{font-size:16px;margin-bottom:8px;}
+  .card p{font-size:13.5px;color:var(--stone);}
+  .card .pill{display:inline-block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--accent-deep);background:#F3E2D9;border-radius:100px;padding:4px 11px;margin-bottom:12px;}
+  .langwrap{display:flex;flex-wrap:wrap;gap:9px;margin-top:6px;}
+  .lang{font-size:13px;font-weight:600;color:var(--slate);background:var(--cream);border:1px solid var(--line);border-radius:100px;padding:7px 15px;}
+  .callout{background:linear-gradient(135deg,var(--ink),var(--accent-deep));color:#F4ECE4;border-radius:16px;padding:34px 32px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;}
+  .callout h2{color:#fff;margin-bottom:6px;}
+  .callout p{color:#EBD9CF;font-size:15px;max-width:560px;}
+  .btn{background:var(--accent);color:#fff;text-decoration:none;padding:13px 24px;border-radius:100px;font-weight:700;font-size:14.5px;white-space:nowrap;}
+  footer{padding:30px 0 46px;color:var(--stone);font-size:12.5px;}
+  footer a{color:var(--accent-deep);}
+  .src{margin-top:8px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../index.html" style="text-decoration:none;color:inherit;"><span class="dot">&#10039;</span> AI Blog Explainer</a>
+    <div class="srcbadge">Claude</div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="tag">Claude &middot; Product &middot; July 23, 2026</span>
+    <h1>Think Through Hard Problems in Voice Mode</h1>
+    <p class="lede">Some problems you can&rsquo;t type your way through. Claude voice mode now runs on Opus and Sonnet, reaches the tools you&rsquo;ve connected, and speaks many more languages &mdash; turning a spoken sounding board into one that can actually act.</p>
+    <div class="meta">
+      <div class="m"><span>Source</span><strong>Claude blog</strong></div>
+      <div class="m"><span>Topic</span><strong>Product &middot; Voice</strong></div>
+      <div class="m"><span>Theme</span><strong>Agentic / connected tools</strong></div>
+      <div class="m"><span>Reading time</span><strong>5 min</strong></div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="tldr">
+      <h2>The idea in five lines</h2>
+      <ul>
+        <li>Voice mode used to run only on Haiku &mdash; fast, but shallow. Now Opus and Sonnet, the models built for hard problem-solving, are available too.</li>
+        <li>You can switch models mid-conversation, and voice defaults to your last text-chat model, so you move between voice and text without starting over.</li>
+        <li>Voice can now reach your connected tools &mdash; Gmail, Slack, Google Calendar, Canva &mdash; so a spoken decision becomes an action (with a permission prompt each time).</li>
+        <li>Many more languages are available on every plan &mdash; from Hindi and Japanese to Brazilian Portuguese &mdash; switchable mid-conversation.</li>
+        <li>It&rsquo;s in beta on mobile, desktop, and web (best from your phone); Free gets Haiku + one tool, paid plans unlock the bigger models and all connected tools.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Why it changed</div>
+    <h2>A sounding board that keeps up</h2>
+    <p class="body">After hands-free conversation arrived earlier this year, people stopped using voice for quick questions and started working through real business problems out loud, across longer sessions. But voice ran only on Haiku, chosen for speed &mdash; it kept things quick, not always deep.</p>
+    <p class="body">Now Opus and Sonnet are in voice mode. Voice uses the fastest version of whichever model you pick, so conversation still flows. With more capable models you can talk through a half-formed idea and work out what you actually think &mdash; Claude asks follow-up questions and builds on your reasoning rather than handing you an answer. It takes turns: listens, pauses to think, then responds.</p>
+    <p class="lead-quote">Some problems you can&rsquo;t type your way through &mdash; practicing a pitch, weighing two offers, reviewing your own process out loud.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">What&rsquo;s new</div>
+    <h2>Three upgrades in one release</h2>
+    <div class="grid3">
+      <div class="card"><span class="pill">Models</span><h3>Opus &amp; Sonnet in voice</h3><p>Deeper reasoning for hard problems, not just quick answers. Switch models mid-conversation from the picker; voice defaults to your last text model.</p></div>
+      <div class="card"><span class="pill">Tools</span><h3>Reaches your connectors</h3><p>Voice can now use connected tools like Gmail, Slack, Google Calendar, and Canva &mdash; asking permission before each use.</p></div>
+      <div class="card"><span class="pill">Languages</span><h3>Many more, on every plan</h3><p>Talk in the language you think in and switch mid-conversation. Set the language by asking out loud or via the voice language picker.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">From talking to doing</div>
+    <h2>When you&rsquo;ve decided, ask Claude to do it</h2>
+    <p class="body">The upgrade that matters most for knowledge workers: voice is no longer just for thinking. Once you&rsquo;ve talked something through, Claude can act on it inside your connected tools.</p>
+
+    <div class="figure">
+      <div class="cap">Figure 1 &middot; A spoken thought becomes an action</div>
+      <div class="flow">
+        <div class="fstep"><div class="n">1</div><h4>Talk it through</h4><p>Brainstorm or weigh a decision out loud with Opus or Sonnet.</p></div>
+        <div class="fstep"><div class="n">2</div><h4>Decide</h4><p>Claude finds gaps in your logic and helps you land on a next step.</p></div>
+        <div class="fstep"><div class="n">3</div><h4>Ask it to act</h4><p>&ldquo;Push my 3pm 30 minutes,&rdquo; &ldquo;draft replies to today&rsquo;s critical emails.&rdquo;</p></div>
+        <div class="fstep"><div class="n">4</div><h4>Approve</h4><p>Claude asks permission before touching a connected tool &mdash; you stay in control.</p></div>
+      </div>
+      <div class="loopnote">&#8635; Think, decide, act &mdash; without leaving the conversation or picking up the keyboard.</div>
+    </div>
+
+    <div class="grid2">
+      <div class="card"><span class="pill">Try it</span><h3>Practice &amp; pressure-test</h3><p>Rehearse an important conversation and ask for feedback on your communication style, or talk through a client pitch and ask Claude to find gaps in your logic.</p></div>
+      <div class="card"><span class="pill">Try it</span><h3>Turn talk into deliverables</h3><p>Turn a pitch conversation into a one-pager in Canva, or ask Claude to summarize today&rsquo;s emails and draft responses to the most critical ones.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Speak your language</div>
+    <h2>Eleven language options, switchable mid-conversation</h2>
+    <p class="body">Voice languages are now available on every plan. Claude doesn&rsquo;t auto-detect &mdash; you ask out loud or pick from the voice language picker, and the setting is specific to voice mode.</p>
+    <div class="langwrap">
+      <span class="lang">English</span>
+      <span class="lang">French</span>
+      <span class="lang">German</span>
+      <span class="lang">Hindi</span>
+      <span class="lang">Indonesian</span>
+      <span class="lang">Italian</span>
+      <span class="lang">Japanese</span>
+      <span class="lang">Korean</span>
+      <span class="lang">Portuguese (Brazil)</span>
+      <span class="lang">Spanish (Latin America)</span>
+      <span class="lang">Spanish (Spain)</span>
+    </div>
+  </div>
+</section>
+
+<section style="border-bottom:none;">
+  <div class="wrap">
+    <div class="callout">
+      <div>
+        <h2>Getting started</h2>
+        <p>The update is in beta for all chat users on mobile, desktop, and web &mdash; and works best from your phone. Free plan: Haiku, one connected tool, all languages. Paid plans: expanded models and all your connected tools. Tap the sound-wave icon in the Claude mobile app to try it.</p>
+      </div>
+      <a class="btn" href="https://claude.com/blog/think-through-hard-problems-in-voice-mode">Read the post &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<nav id="aibe-nav" style="max-width:1080px;margin:0 auto;padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:14px;border-top:1px solid #DED6C7;flex-wrap:wrap;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;">
+  <a href="../index.html" style="font-size:13px;font-weight:700;color:#A8543C;text-decoration:none;">&larr; All explainers</a>
+  <div style="display:flex;gap:10px;">
+    <a id="aibe-prev" href="#" style="display:none;font-size:13px;font-weight:700;color:#A8543C;text-decoration:none;border:1px solid #DED6C7;border-radius:100px;padding:8px 15px;">&lsaquo; Prev</a>
+    <a id="aibe-next" href="#" style="display:none;font-size:13px;font-weight:700;color:#A8543C;text-decoration:none;border:1px solid #DED6C7;border-radius:100px;padding:8px 15px;">Next &rsaquo;</a>
+  </div>
+</nav>
+<script>
+(function(){
+  fetch("../feed.xml").then(function(r){return r.text();}).then(function(t){
+    var doc=new DOMParser().parseFromString(t,"application/xml");
+    var items=[].slice.call(doc.querySelectorAll("item")).map(function(it){var l=it.querySelector("link");return l?l.textContent.trim():"";}).filter(Boolean);
+    var mine=location.href.split("#")[0].split("?")[0].split("/").pop();
+    var i=-1; for(var k=0;k<items.length;k++){ if(items[k].split("/").pop()===mine){ i=k; break; } }
+    if(i<0) return;
+    var newer=items[i-1], older=items[i+1];
+    var pe=document.getElementById("aibe-prev"), ne=document.getElementById("aibe-next");
+    if(newer){ pe.href=newer; pe.style.display=""; }
+    if(older){ ne.href=older; ne.style.display=""; }
+  }).catch(function(){});
+})();
+</script>
+
+<footer>
+  <div class="wrap">
+    <p>Explainer artifact generated from the Claude blog &middot; AI Blog Explainers house style (Claude clay palette).</p>
+    <p class="src">Source: <a href="https://claude.com/blog/think-through-hard-problems-in-voice-mode">Think through hard problems in voice mode</a> &mdash; claude.com/blog, July 23, 2026.</p>
+  </div>
+</footer>
+
+<div id="aibe-share" style="position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:9999;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;">
+  <a href="https://claude.com/blog/think-through-hard-problems-in-voice-mode" target="_blank" rel="noopener" title="Read the original article"
+     style="background:#7A3B29;color:#fff;text-decoration:none;font-size:12px;font-weight:700;padding:9px 13px;border-radius:100px;box-shadow:0 6px 18px -8px rgba(0,0,0,.5);text-align:center;">Read original &#8599;</a>
+  <button onclick="aibeCopy()" title="Copy link"
+     style="background:#CC785C;color:#fff;border:none;cursor:pointer;font-size:12px;font-weight:700;padding:9px 13px;border-radius:100px;box-shadow:0 6px 18px -8px rgba(0,0,0,.5);">Copy link</button>
+  <div style="display:flex;gap:8px;">
+    <a id="aibe-li" target="_blank" rel="noopener" title="Share on LinkedIn"
+       style="flex:1;background:#0A66C2;color:#fff;text-decoration:none;font-size:12px;font-weight:700;padding:9px 0;border-radius:100px;text-align:center;box-shadow:0 6px 18px -8px rgba(0,0,0,.5);">in</a>
+    <a id="aibe-x" target="_blank" rel="noopener" title="Share on X"
+       style="flex:1;background:#1F1B18;color:#fff;text-decoration:none;font-size:12px;font-weight:700;padding:9px 0;border-radius:100px;text-align:center;box-shadow:0 6px 18px -8px rgba(0,0,0,.5);">X</a>
+  </div>
+</div>
+<script>
+(function(){
+  var u=encodeURIComponent(location.href), t=encodeURIComponent(document.title.replace(" — Explainer",""));
+  document.getElementById("aibe-li").href="https://www.linkedin.com/sharing/share-offsite/?url="+u;
+  document.getElementById("aibe-x").href="https://twitter.com/intent/tweet?url="+u+"&text="+t;
+})();
+function aibeCopy(){
+  navigator.clipboard.writeText(location.href).then(function(){
+    var b=event.target; var o=b.textContent; b.textContent="Copied!"; setTimeout(function(){b.textContent=o;},1400);
+  });
+}
+</script>
+</body>
+</html>
